@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}announcement-detail-page{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">首页</a> / <a href="/announcements/">公告检索</a> / {{ page.title }}
+        </div>
+    </div>
+</div>
+
+<div class="announcement-detail">
+    <div class="container">
+        <article>
+            <header class="detail-header">
+                <span class="announcement-type type-{{ page.announcement_type }}">
+                    {{ page.get_announcement_type_display }}
+                </span>
+                <h1>{{ page.title }}</h1>
+                <div class="meta-info">
+                    <span>发布时间: {{ page.date|date:"Y-m-d" }}</span>
+                    {% if page.publisher %}
+                    <span>发布单位: {{ page.publisher }}</span>
+                    {% endif %}
+                    {% if page.region %}
+                    <span>地区: {{ page.get_region_display }}{% if page.city %} - {{ page.city }}{% endif %}</span>
+                    {% endif %}
+                    {% if page.project_number %}
+                    <span>项目编号: {{ page.project_number }}</span>
+                    {% endif %}
+                </div>
+            </header>
+
+            {% if user.is_authenticated %}
+            <div class="detail-content">
+                {{ page.content|richtext }}
+            </div>
+
+            {% if page.attachment %}
+            <div class="attachment-section">
+                <h3>附件下载</h3>
+                <a href="{{ page.attachment.url }}" class="download-btn" download>下载附件</a>
+            </div>
+            {% endif %}
+
+            {% if page.external_link %}
+            <div class="external-link-section">
+                <h3>公告原文</h3>
+                <a href="{{ page.external_link }}" class="external-link-btn" target="_blank" rel="noopener noreferrer">
+                    <svg width="16" height="16" fill="currentColor" style="margin-right: 5px; vertical-align: middle;">
+                        <path
+                            d="M14 2H8a1 1 0 0 0 0 2h3.586L6.293 9.293a1 1 0 1 0 1.414 1.414L13 5.414V9a1 1 0 0 0 2 0V3a1 1 0 0 0-1-1z" />
+                        <path
+                            d="M12 12v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2a1 1 0 0 0 0-2H4a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4v-2a1 1 0 0 0-2 0z" />
+                    </svg>
+                    查看公告原文
+                </a>
+            </div>
+            {% endif %}
+
+            <div class="action-buttons">
+                <button class="favorite-btn" data-id="{{ page.id }}">收藏</button>
+                {% if user.is_staff %}
+                <a href="/admin/pages/{{ page.id }}/edit/" class="btn btn-edit">编辑公告</a>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="login-prompt-card">
+                <h3>需要登录查看完整内容</h3>
+                <p>登录后可查看公告详情、下载附件并收藏公告</p>
+                <a href="{% url 'account_login' %}?next={{ request.path }}" class="login-btn">立即登录</a>
+            </div>
+            {% endif %}
+        </article>
+    </div>
+</div>
+{% endblock %}

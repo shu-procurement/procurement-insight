@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}{% block head_title %}{% endblock %} - 招投标信息平台{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="auth-container"
+    style="background: linear-gradient(rgba(0, 85, 164, 0.7), rgba(0, 85, 164, 0.85)), url('{% static "images/login_bg.jpg" %}') center/cover no-repeat; min-height: calc(100vh - 200px); display: flex; align-items: center; justify-content: center; padding: 40px 0;">
+    <div class="auth-card"
+        style="background: white; width: 100%; max-width: 450px; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <div class="auth-header" style="text-align: center; margin-bottom: 30px;">
+            <h2 style="color: #0055a4; margin: 0 0 10px 0; font-size: 28px;">{% block content_title %}{% endblock %}
+            </h2>
+            <p style="color: #666; margin: 0;">{% block content_subtitle %}{% endblock %}</p>
+        </div>
+
+        {% if messages %}
+        <div class="messages" style="margin-bottom: 20px;">
+            {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}"
+                style="padding: 10px; border-radius: 4px; background: #e3f2fd; color: #0d47a1; margin-bottom: 10px; font-size: 14px;">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="auth-content">
+            {% block auth_content %}{% endblock %}
+        </div>
+
+        <div class="auth-footer"
+            style="margin-top: 20px; text-align: center; font-size: 14px; color: #666; border-top: 1px solid #eee; padding-top: 20px;">
+            {% block auth_footer %}{% endblock %}
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Custom Auth Styles */
+    .auth-card input[type="text"],
+    .auth-card input[type="email"],
+    .auth-card input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    .auth-card input[type="text"]:focus,
+    .auth-card input[type="email"]:focus,
+    .auth-card input[type="password"]:focus {
+        border-color: #0055a4;
+        outline: none;
+    }
+
+    .auth-card label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .auth-card .btn-primary {
+        background: #0055a4;
+        color: white;
+        border: none;
+        width: 100%;
+        padding: 12px;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .auth-card .btn-primary:hover {
+        background: #003b73;
+    }
+
+    .auth-card .helptext {
+        display: block;
+        font-size: 12px;
+        color: #999;
+        margin-bottom: 10px;
+    }
+
+    .auth-card ul.errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 10px 0;
+        color: #0055a4;
+        font-size: 13px;
+    }
+</style>
+{% endblock %}

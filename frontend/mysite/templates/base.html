@@ -1,0 +1,76 @@
+{% load static wagtailcore_tags wagtailuserbar %}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}
+        {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
+        {% endblock %}
+        {% block title_suffix %}
+        {% wagtail_site as current_site %}
+        {% if current_site and current_site.site_name %} - {{ current_site.site_name }}{% endif %}
+        {% endblock %}
+    </title>
+    {% if page.search_description %}
+    <meta name="description" content="{{ page.search_description }}" />
+    {% endif %}
+
+    {# Force all links in the live preview panel to be opened in a new tab #}
+    {% if request.in_preview_panel %}
+    <base target="_blank">
+    {% endif %}
+
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+    {% wagtailuserbar %}
+
+    <nav class="main-nav">
+        <div class="container">
+            <a href="/" class="logo">招投标信息平台</a>
+            <ul class="nav-links">
+                <li><a href="/">首页</a></li>
+                <li><a href="/announcements/">公告检索</a></li>
+                <li><a href="/chat/">需求调查报告</a></li>
+                <li><a href="/reports/">历史报告查看</a></li>
+            </ul>
+            <div class="user-actions">
+                {% if user.is_authenticated %}
+                <span>欢迎, {{ user.username }}</span>
+                {% if user.is_staff %}
+                <a href="/admin/">管理后台</a>
+                {% endif %}
+                <form action="{% url 'account_logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit"
+                        style="background:none; border:none; color:inherit; cursor:pointer; font:inherit; text-decoration:underline;">退出</button>
+                </form>
+                {% else %}
+                <a href="{% url 'account_login' %}">登录</a>
+                <a href="{% url 'account_signup' %}"
+                    style="margin-left: 10px; background: #0055a4; color: white; padding: 5px 15px; border-radius: 4px; text-decoration: none;">注册</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2026 招投标信息平台 版权所有</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

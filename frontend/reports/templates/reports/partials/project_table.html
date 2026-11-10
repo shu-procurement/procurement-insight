@@ -1,0 +1,48 @@
+<div class="project-table-container">
+    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+        <thead>
+            <tr style="background: #f9f9f9; color: #666;">
+                <th style="padding: 10px; border-bottom: 1px solid #eee; text-align: left;">序号</th>
+                <th style="padding: 10px; border-bottom: 1px solid #eee; text-align: left;">项目名称</th>
+                <th style="padding: 10px; border-bottom: 1px solid #eee; text-align: left;">采购方式</th>
+                <th style="padding: 10px; border-bottom: 1px solid #eee; text-align: left;">采购时间</th>
+                <th style="padding: 10px; border-bottom: 1px solid #eee; text-align: left;">采购单位</th>
+                <th style="padding: 10px; border-bottom: 1px solid #eee; text-align: left;">预算(万元)</th>
+                <th style="padding: 10px; border-bottom: 1px solid #eee; text-align: left;">供应商名称</th>
+                <th style="padding: 10px; border-bottom: 1px solid #eee; text-align: left;">成交(万元)</th>
+                <th style="padding: 10px; border-bottom: 1px solid #eee; text-align: left;">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if projects %}
+            {% for project in projects %}
+            <tr>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ forloop.counter }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ project.project_name }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ project.procurement_method }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ project.procurement_time|date:"Y-m-d" }}
+                </td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ project.procurement_unit }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ project.budget_amount }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ project.supplier_name }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ project.transaction_amount }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">
+                    {% if project.detail_link %}
+                    <a href="{{ project.detail_link }}" target="_blank"
+                        style="color:#2196f3; text-decoration: none;">查看</a>
+                    {% else %}
+                    <span style="color:#ccc; cursor: not-allowed;">查看</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="9" style="padding: 30px; text-align: center; color: #999; border-bottom: 1px solid #eee;">
+                    暂无数据
+                </td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>

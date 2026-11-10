@@ -1,0 +1,87 @@
+{% extends "wagtailadmin/admin_base.html" %}
+{% load i18n wagtailadmin_tags %}
+{% block titletag %}登录{% endblock %}
+{% block bodyclass %}login{% endblock %}
+
+{% block furniture %}
+<main class="content-wrapper" id="main">
+    <h1>{% block branding_login %}登录{% endblock %}</h1>
+
+    <div class="messages" role="status">
+        {# Always show messages div so it can be appended to by JS #}
+        {% if messages or form.errors %}
+        <ul>
+            {% if form.errors %}
+            {% for error in form.non_field_errors %}
+            <li class="error">{{ error }}</li>
+            {% endfor %}
+            {% endif %}
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+
+    {% block above_login %}{% endblock %}
+
+    <form class="login-form" action="{% url 'wagtailadmin_login' %}" method="post" autocomplete="off" novalidate>
+        {% block login_form %}
+        {% csrf_token %}
+
+        {% url 'wagtailadmin_home' as home_url %}
+        <input type="hidden" name="next" value="{{ next|default:home_url }}" />
+
+        {% block fields %}
+        {% formattedfield form.username %}
+
+        {# Manually render password field to control label #}
+        <div class="field {{ form.password.css_classes }}">
+            <label class="field-label" for="{{ form.password.id_for_label }}">密码<span>*</span></label>
+            <div class="field-content">
+                <div class="input">
+                    {{ form.password }}
+                </div>
+                {% if form.password.help_text %}
+                <p class="help">{{ form.password.help_text }}</p>
+                {% endif %}
+                {% if form.password.errors %}
+                <p class="error-message">{{ form.password.errors.as_text }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if show_password_reset %}
+        <a class="reset-password" href="{% url 'wagtailadmin_password_reset' %}">{% trans "Forgotten password?" %}</a>
+        {% endif %}
+
+        {% block extra_fields %}
+        {% for field_name, field in form.extra_fields %}
+        {% formattedfield field %}
+        {% endfor %}
+        {% endblock extra_fields %}
+
+        {% include "wagtailadmin/shared/forms/single_checkbox.html" with label_classname="remember-me" name="remember"
+        text=_("Remember me") %}
+        {% endblock %}
+        {% endblock %}
+        <footer class="form-actions">
+            {% block submit_buttons %}
+            <button type="submit" class="button button-longrunning" data-controller="w-progress"
+                data-action="w-progress#activate" data-w-progress-active-value="{% trans 'Signing in…' %}">
+                {% icon name="spinner" %}
+                <em data-w-progress-target="label">登录</em>
+            </button>
+            {% endblock %}
+        </footer>
+    </form>
+
+    {% block below_login %}{% endblock %}
+
+    {% block branding_logo %}
+    <div class="login-logo">
+        {% include "wagtailadmin/logo.html" with wordmark="True" %}
+    </div>
+    {% endblock %}
+</main>
+{% endblock %}

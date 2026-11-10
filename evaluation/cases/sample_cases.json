@@ -1,0 +1,90 @@
+{
+  "response_time_cases": [
+    {
+      "name": "django_announcements_search_server",
+      "target": "django",
+      "method": "GET",
+      "path": "/announcements/",
+      "params": {
+        "search": "采购"
+      },
+      "repeat": 10
+    },
+    {
+      "name": "django_ai_analysis_page",
+      "target": "django",
+      "method": "GET",
+      "path": "/reports/ai-analysis/",
+      "params": {
+        "query": "服务器采购"
+      },
+      "repeat": 10
+    },
+    {
+      "name": "fastapi_expand_keywords",
+      "target": "fastapi",
+      "method": "POST",
+      "path": "/api/chat/expand-keywords",
+      "json": {
+        "query": "服务器采购"
+      },
+      "repeat": 10
+    }
+  ],
+  "search_cases": [
+    {
+      "name": "search_server_procurement",
+      "query": "服务器",
+      "relevant_keywords": [
+        "服务器",
+        "存储",
+        "机房",
+        "算力",
+        "信息化"
+      ]
+    },
+    {
+      "name": "search_security_procurement",
+      "query": "安防",
+      "relevant_keywords": [
+        "安防",
+        "监控",
+        "摄像",
+        "门禁",
+        "弱电"
+      ]
+    }
+  ],
+  "hallucination_cases": [
+    {
+      "name": "hallucination_server_summary",
+      "prompt": "请查询与服务器采购相关的数据，并返回最相关的一条采购记录。",
+      "answer_type": "json",
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "selected_keywords": [
+        "服务器",
+        "存储",
+        "机房"
+      ]
+    },
+    {
+      "name": "hallucination_security_summary",
+      "prompt": "请查询与安防采购相关的数据，并返回最相关的一条采购记录。",
+      "answer_type": "json",
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "selected_keywords": [
+        "安防",
+        "监控",
+        "门禁"
+      ]
+    }
+  ]
+}

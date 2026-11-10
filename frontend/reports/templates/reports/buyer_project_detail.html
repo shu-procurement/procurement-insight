@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}buyer-project-detail-page{% endblock %}
+
+{% block title %}{{ buyer_name }}项目明细{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div class="breadcrumb-row">
+            <a href="{{ report.url }}">返回报告</a>
+            <span>/</span>
+            <span>{{ buyer_name }}项目明细</span>
+        </div>
+        <h1>{{ buyer_name }}项目明细</h1>
+        <p class="page-subtitle">展示当前报告中与该采购单位相关的项目公告信息。</p>
+    </div>
+</div>
+
+<div class="announcement-section">
+    <div class="container">
+        <form method="get" class="project-filter-bar announcement-filter-form" id="buyerProjectFilterForm">
+            <input type="hidden" name="buyer" value="{{ buyer_name }}">
+
+            <div class="filter-row">
+                <div class="search-container">
+                    <input
+                        type="text"
+                        name="search"
+                        class="project-search-input"
+                        placeholder="输入公告标题、采购单位或项目编号"
+                        value="{{ request.GET.search }}"
+                    >
+                </div>
+
+                <button type="submit" class="project-search-btn">查询</button>
+                <a href="?buyer={{ buyer_name|urlencode }}" class="filter-reset-btn">重置</a>
+            </div>
+
+            <div class="filter-grid">
+                <label class="filter-field">
+                    <span class="filter-label">发布时间</span>
+                    <select name="time" class="filter-select auto-submit">
+                        <option value="all" {% if request.GET.time|default:'all' == 'all' %}selected{% endif %}>全部</option>
+                        <option value="1m" {% if request.GET.time == '1m' %}selected{% endif %}>近1个月</option>
+                        <option value="3m" {% if request.GET.time == '3m' %}selected{% endif %}>近3个月</option>
+                        <option value="6m" {% if request.GET.time == '6m' %}selected{% endif %}>近6个月</option>
+                        <option value="1y" {% if request.GET.time == '1y' %}selected{% endif %}>近1年</option>
+                        <option value="3y" {% if request.GET.time == '3y' %}selected{% endif %}>近3年</option>
+                    </select>
+                </label>
+
+                <label class="filter-field">
+                    <span class="filter-label">地区</span>
+                    <select name="region" class="filter-select auto-submit">
+                        {% for code, name in region_choices %}
+                        <option value="{{ code }}" {% if request.GET.region|default:'all' == code %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+
+                <label class="filter-field">
+                    <span class="filter-label">金额范围</span>
+                    <select name="amount" class="filter-select auto-submit">
+                        <option value="all" {% if request.GET.amount|default:'all' == 'all' %}selected{% endif %}>全部</option>
+                        <option value="0-100" {% if request.GET.amount == '0-100' %}selected{% endif %}>100万以下</option>
+                        <option value="100-500" {% if request.GET.amount == '100-500' %}selected{% endif %}>100万-500万</option>
+                        <option value="500-1000" {% if request.GET.amount == '500-1000' %}selected{% endif %}>500万-1000万</option>
+                        <option value="1000-5000" {% if request.GET.amount == '1000-5000' %}selected{% endif %}>1000万-5000万</option>
+                        <option value="5000-inf" {% if request.GET.amount == '5000-inf' %}selected{% endif %}>5000万以上</option>
+                    </select>
+                </label>
+            </div>
+        </form>
+
+        <div class="result-stats">
+            {% if search_active %}
+            <p>采购单位 <strong>{{ buyer_name }}</strong> 中，关键词 <strong>"{{ search_query }}"</strong> 共匹配到 <strong>{{ total_count }}</strong> 条项目公告。</p>
+            {% else %}
+            <p>采购单位 <strong>{{ buyer_name }}</strong> 共找到 <strong>{{ total_count }}</strong> 条项目公告。</p>
+            {% endif %}
+        </div>
+
+        {% include "reports/partials/announcement_table.html" with announcements=announcements page_size=page_size %}
+    </div>
+</div>
+
+<style>
+.page-header {
+    padding: 36px 0 24px;
+    background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%);
+    border-bottom: 1px solid #e5edf5;
+}
+
+.breadcrumb-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.breadcrumb-row a {
+    color: #1976d2;
+    text-decoration: none;
+}
+
+.page-header h1 {
+    margin: 0 0 10px;
+    font-size: 30px;
+    line-height: 1.2;
+    color: #1f2937;
+}
+
+.page-subtitle {
+    margin: 0;
+    color: #5f6f82;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.announcement-section {
+    padding: 28px 0 40px;
+    background: #f5f7fb;
+}
+
+.project-filter-bar {
+    background: #fff;
+    padding: 20px 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    border: 1px solid #edf1f5;
+    margin-bottom: 18px;
+}
+
+.filter-row {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.search-container {
+    position: relative;
+    flex: 1;
+}
+
+.project-search-input {
+    width: 100%;
+    padding: 12px 16px !important;
+    border: 1px solid #d9e3f0 !important;
+    border-radius: 22px !important;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+    outline: none;
+    font-size: 14px;
+}
+
+.project-search-input:focus {
+    border-color: #2196f3 !important;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.12);
+}
+
+.project-search-btn {
+    border: none;
+    border-radius: 22px !important;
+    padding: 10px 26px !important;
+    background: #009688;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.project-search-btn:hover {
+    background: #00796b;
+    transform: translateY(-1px);
+}
+
+.filter-reset-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 72px;
+    padding: 10px 18px;
+    border-radius: 22px;
+    border: 1px solid #d9e3f0;
+    background: #fff;
+    color: #4a5f7a;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.filter-reset-btn:hover {
+    color: #1976d2;
+    border-color: #2196f3;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-label {
+    font-size: 13px;
+    color: #718096;
+    font-weight: 600;
+}
+
+.filter-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d9e3f0;
+    border-radius: 10px;
+    background: #fff;
+    color: #334155;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter-select:focus {
+    border-color: #2196f3;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.12);
+}
+
+.result-stats {
+    margin-bottom: 12px;
+    color: #60748a;
+    font-size: 14px;
+}
+
+.result-stats strong {
+    color: #1f2937;
+}
+
+@media (max-width: 768px) {
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('buyerProjectFilterForm');
+    if (!form) {
+        return;
+    }
+
+    document.querySelectorAll('.auto-submit').forEach(function (element) {
+        element.addEventListener('change', function () {
+            form.submit();
+        });
+    });
+
+    document.addEventListener('click', function (event) {
+        const pageButton = event.target.closest('.announcement-page-link');
+        if (!pageButton || pageButton.disabled) {
+            return;
+        }
+
+        const page = pageButton.dataset.page;
+        if (!page) {
+            return;
+        }
+
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', page);
+        window.location.href = url.toString();
+    });
+});
+</script>
+{% endblock %}

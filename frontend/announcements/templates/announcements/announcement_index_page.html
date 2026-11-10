@@ -1,0 +1,701 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}announcement-index-page{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1>{{ page.title }}</h1>
+        {% if page.intro %}
+        <div class="intro">{{ page.intro|richtext }}</div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="announcement-section">
+    <div class="container">
+        <form method="get" class="project-filter-bar announcement-filter-form" id="announcementFilterForm">
+            <input type="hidden" name="page" value="{{ request.GET.page|default:'1' }}" id="pageInput">
+
+            <div class="filter-row">
+                <div class="search-container">
+                    <input
+                        type="text"
+                        name="search"
+                        id="searchInput"
+                        class="project-search-input"
+                        placeholder="输入公告标题、项目名称、采购单位或项目编号"
+                        value="{{ request.GET.search }}"
+                    >
+                    <ul class="search-suggestions" id="searchSuggestions" style="display: none;"></ul>
+
+                    {% if user.is_authenticated %}
+                    <div class="search-history-panel" id="searchHistoryPanel" style="display: none;">
+                        <div class="history-header">
+                            <h4>最近搜索</h4>
+                            <button type="button" class="clear-history-btn" id="clearHistoryBtn">清空</button>
+                        </div>
+                        <ul class="history-list" id="historyList"></ul>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="project-search-btn">查询</button>
+                <a href="{{ request.path }}" class="filter-reset-btn">重置</a>
+            </div>
+
+            <div class="filter-grid">
+                <label class="filter-field">
+                    <span class="filter-label">发布时间</span>
+                    <select name="time" class="filter-select auto-submit">
+                        <option value="" {% if not request.GET.time %}selected{% endif %}>全部</option>
+                        <option value="today" {% if request.GET.time == 'today' %}selected{% endif %}>今日</option>
+                        <option value="month" {% if request.GET.time == 'month' %}selected{% endif %}>近一个月</option>
+                        <option value="three_months" {% if request.GET.time == 'three_months' %}selected{% endif %}>近三个月</option>
+                        <option value="six_months" {% if request.GET.time == 'six_months' %}selected{% endif %}>近半年</option>
+                        <option value="year" {% if request.GET.time == 'year' %}selected{% endif %}>近一年</option>
+                    </select>
+                </label>
+
+                <label class="filter-field">
+                    <span class="filter-label">地区</span>
+                    <select name="region" class="filter-select auto-submit">
+                        {% for code, name in region_choices %}
+                        <option value="{{ code }}" {% if request.GET.region|default:'all' == code %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+
+                <label class="filter-field">
+                    <span class="filter-label">金额范围</span>
+                    <select name="amount" class="filter-select auto-submit">
+                        <option value="" {% if not request.GET.amount %}selected{% endif %}>全部</option>
+                        <option value="below_1" {% if request.GET.amount == 'below_1' %}selected{% endif %}>1 万以下</option>
+                        <option value="1_10" {% if request.GET.amount == '1_10' %}selected{% endif %}>1 万到 10 万</option>
+                        <option value="10_100" {% if request.GET.amount == '10_100' %}selected{% endif %}>10 万到 100 万</option>
+                        <option value="100_500" {% if request.GET.amount == '100_500' %}selected{% endif %}>100 万到 500 万</option>
+                        <option value="above_500" {% if request.GET.amount == 'above_500' %}selected{% endif %}>500 万以上</option>
+                    </select>
+                </label>
+            </div>
+        </form>
+
+        <div class="result-stats">
+            {% if search_active %}
+            <p>关键词 <strong>"{{ search_query }}"</strong> 共匹配到 <strong>{{ total_count }}</strong> 条采购公告。</p>
+            {% elif showing_latest_default %}
+            <p>当前默认展示最新 <strong>{{ page_size }}</strong> 条采购公告，共收录 <strong>{{ total_count }}</strong> 条数据。</p>
+            {% else %}
+            <p>共找到 <strong>{{ total_count }}</strong> 条采购公告。</p>
+            {% endif %}
+        </div>
+
+        {% include "reports/partials/announcement_table.html" with announcements=announcements page_size=page_size %}
+    </div>
+</div>
+
+<style>
+.page-header {
+    padding: 36px 0 24px;
+    background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%);
+    border-bottom: 1px solid #e5edf5;
+}
+
+.page-header h1 {
+    margin: 0 0 10px;
+    font-size: 30px;
+    line-height: 1.2;
+    color: #1f2937;
+}
+
+.page-header .intro {
+    color: #5f6f82;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.announcement-section {
+    padding: 28px 0 40px;
+    background: #f5f7fb;
+}
+
+.project-filter-bar {
+    background: #fff;
+    padding: 20px 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    border: 1px solid #edf1f5;
+    margin-bottom: 18px;
+}
+
+.filter-row {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.search-container {
+    position: relative;
+    flex: 1;
+}
+
+.project-search-input {
+    width: 100%;
+    padding: 12px 16px !important;
+    border: 1px solid #d9e3f0 !important;
+    border-radius: 22px !important;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+    outline: none;
+    font-size: 14px;
+}
+
+.project-search-input:focus {
+    border-color: #2196f3 !important;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.12);
+}
+
+.project-search-btn {
+    border: none;
+    border-radius: 22px !important;
+    padding: 10px 26px !important;
+    background: #009688;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.project-search-btn:hover {
+    background: #00796b;
+    transform: translateY(-1px);
+}
+
+.filter-reset-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 72px;
+    padding: 10px 18px;
+    border-radius: 22px;
+    border: 1px solid #d9e3f0;
+    background: #fff;
+    color: #4a5f7a;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.filter-reset-btn:hover {
+    color: #1976d2;
+    border-color: #2196f3;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-label {
+    font-size: 13px;
+    color: #718096;
+    font-weight: 600;
+}
+
+.filter-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d9e3f0;
+    border-radius: 10px;
+    background: #fff;
+    color: #334155;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter-select:focus {
+    border-color: #2196f3;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.12);
+}
+
+.result-stats {
+    margin-bottom: 12px;
+    color: #60748a;
+    font-size: 14px;
+}
+
+.result-stats strong {
+    color: #1f2937;
+}
+
+.custom-announcement-list {
+    background: #f9fafc;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.announcement-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+}
+
+.announcement-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+.card-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.card-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.tag-type {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    line-height: 1.2;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.tag-result {
+    background-color: #fff4e5;
+    color: #ff8f00;
+    border: 1px solid #ffe0b2;
+}
+
+.tag-bidding {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #bbdefb;
+}
+
+.card-title {
+    margin: 0;
+    min-width: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-title a:hover {
+    color: #2196f3;
+}
+
+.card-meta-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    font-size: 14px;
+    color: #666;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+}
+
+.amount-red {
+    color: #d32f2f;
+    font-weight: 600;
+    font-size: 15px;
+    margin: 0 2px;
+}
+
+.card-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    min-width: 120px;
+    min-height: 56px;
+}
+
+.publish-date {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 12px;
+}
+
+.btn-view-detail {
+    display: inline-block;
+    padding: 6px 16px;
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.btn-view-detail:hover {
+    background-color: #bbdefb;
+    color: #1565c0;
+    text-decoration: none;
+}
+
+.announcement-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+
+.pagination-page {
+    min-width: 36px;
+    height: 36px;
+    border: 1px solid #d9e3f0;
+    background: #fff;
+    color: #4a5f7a;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0 12px;
+}
+
+.pagination-page:hover {
+    border-color: #2196f3;
+    color: #1976d2;
+}
+
+.pagination-page.active {
+    background: #2196f3;
+    border-color: #2196f3;
+    color: #fff;
+    font-weight: 600;
+}
+
+.pagination-page:disabled {
+    cursor: not-allowed;
+    color: #b7c1cc;
+    border-color: #edf1f5;
+    background: #f8fafc;
+}
+
+.pagination-summary {
+    width: 100%;
+    text-align: center;
+    color: #8a97a6;
+    font-size: 13px;
+}
+
+.search-suggestions {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    list-style: none;
+    margin: 0;
+    padding: 6px 0;
+    z-index: 20;
+    max-height: 280px;
+    overflow-y: auto;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+}
+
+.search-suggestions li {
+    padding: 10px 14px;
+    cursor: pointer;
+    color: #334155;
+}
+
+.search-suggestions li:hover {
+    background: #f8fafc;
+}
+
+.search-history-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 12px;
+    z-index: 19;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.history-header h4 {
+    margin: 0;
+    font-size: 14px;
+    color: #334155;
+}
+
+.clear-history-btn,
+.delete-item {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.clear-history-btn {
+    color: #2563eb;
+    font-size: 12px;
+}
+
+.history-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+}
+
+.history-item a {
+    flex: 1;
+    color: #475569;
+    text-decoration: none;
+}
+
+.history-item a:hover {
+    color: #2563eb;
+}
+
+.delete-item {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.delete-item:hover {
+    color: #ef4444;
+}
+
+@media (max-width: 900px) {
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .announcement-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .card-actions {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        min-height: auto;
+    }
+
+    .card-title {
+        white-space: normal;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('announcementFilterForm');
+    const pageInput = document.getElementById('pageInput');
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsContainer = document.getElementById('searchSuggestions');
+    const historyPanel = document.getElementById('searchHistoryPanel');
+    const historyList = document.getElementById('historyList');
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+    let debounceTimer;
+
+    function submitWithFirstPage() {
+        if (!form || !pageInput) return;
+        pageInput.value = '1';
+        form.submit();
+    }
+
+    document.querySelectorAll('.auto-submit').forEach(function (element) {
+        element.addEventListener('change', submitWithFirstPage);
+    });
+
+    document.body.addEventListener('click', function (event) {
+        const pageButton = event.target.closest('.announcement-page-link');
+        if (!pageButton || !form || !pageInput) return;
+        event.preventDefault();
+        const page = pageButton.getAttribute('data-page');
+        if (!page) return;
+        pageInput.value = page;
+        form.submit();
+    });
+
+    if (!searchInput || !suggestionsContainer) {
+        return;
+    }
+
+    searchInput.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        const query = this.value.trim();
+
+        if (query.length < 2) {
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = 'none';
+            return;
+        }
+
+        debounceTimer = setTimeout(async function () {
+            try {
+                const response = await fetch(`/api/search-suggestions/?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                if (data.success && Array.isArray(data.suggestions) && data.suggestions.length) {
+                    suggestionsContainer.innerHTML = data.suggestions
+                        .map(function (item) {
+                            return `<li class="suggestion-item">${escapeHtml(item)}</li>`;
+                        })
+                        .join('');
+                    suggestionsContainer.style.display = 'block';
+                } else {
+                    suggestionsContainer.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('加载搜索建议失败:', error);
+                suggestionsContainer.style.display = 'none';
+            }
+        }, 250);
+    });
+
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('suggestion-item')) {
+            searchInput.value = event.target.textContent;
+            submitWithFirstPage();
+            return;
+        }
+
+        if (!event.target.closest('.search-container')) {
+            suggestionsContainer.style.display = 'none';
+            if (historyPanel) {
+                historyPanel.style.display = 'none';
+            }
+        }
+    });
+
+    if (historyPanel && historyList && clearHistoryBtn) {
+        searchInput.addEventListener('focus', loadSearchHistory);
+
+        async function loadSearchHistory() {
+            try {
+                const response = await fetch('/api/search-history/');
+                if (!response.ok) {
+                    historyPanel.style.display = 'none';
+                    return;
+                }
+                const data = await response.json();
+                if (data.success && Array.isArray(data.history) && data.history.length) {
+                    historyList.innerHTML = data.history.map(function (item) {
+                        const query = escapeHtml(item.query);
+                        const encodedQuery = encodeURIComponent(item.query);
+                        return `
+                            <li class="history-item">
+                                <a href="?search=${encodedQuery}">${query}</a>
+                                <button class="delete-item" data-query="${encodedQuery}" type="button">×</button>
+                            </li>
+                        `;
+                    }).join('');
+                    historyPanel.style.display = 'block';
+                } else {
+                    historyPanel.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('加载搜索历史失败:', error);
+                historyPanel.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('click', async function (event) {
+            if (!event.target.classList.contains('delete-item')) return;
+            event.preventDefault();
+            const query = event.target.dataset.query;
+
+            try {
+                const response = await fetch(`/api/search-history/delete/${query}/`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    loadSearchHistory();
+                }
+            } catch (error) {
+                console.error('删除搜索历史失败:', error);
+            }
+        });
+
+        clearHistoryBtn.addEventListener('click', async function (event) {
+            event.preventDefault();
+            try {
+                const response = await fetch('/api/search-history/clear/', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    loadSearchHistory();
+                }
+            } catch (error) {
+                console.error('清空搜索历史失败:', error);
+            }
+        });
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,775 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}AI 分析{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ===== AI 分析页面样式 ===== */
+.ai-analysis-page {
+    min-height: calc(100vh - 120px);
+    background: linear-gradient(135deg, #0a1628 0%, #0d2847 40%, #0f3460 70%, #162d50 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+}
+
+/* 粒子背景 */
+.particles-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+}
+
+/* 光晕装饰 */
+.ai-analysis-page::before {
+    content: '';
+    position: absolute;
+    top: -150px; right: -150px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0, 150, 255, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+.ai-analysis-page::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0, 200, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+/* 主容器 */
+.ai-container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 20px 60px;
+}
+
+/* 顶部标题 */
+.ai-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+.ai-header h1 {
+    font-size: 28px;
+    color: #fff;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+.ai-header h1 span {
+    color: #00d4ff;
+    font-weight: 600;
+}
+
+/* 关键词展示卡片 */
+.keyword-card {
+    background: rgba(255,255,255, 0.06);
+    border: 1px solid rgba(0, 200, 255, 0.2);
+    border-radius: 12px;
+    padding: 24px 30px;
+    margin-bottom: 36px;
+    backdrop-filter: blur(10px);
+}
+.keyword-card .label {
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+.keyword-card .keyword-text {
+    color: #00d4ff;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* 进度步骤 */
+.progress-steps {
+    margin-bottom: 36px;
+}
+.step-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    opacity: 0.3;
+    transition: opacity 0.6s ease;
+}
+.step-item.active {
+    opacity: 1;
+}
+.step-item.done {
+    opacity: 0.7;
+}
+
+.step-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 200, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.4s ease;
+}
+.step-item.active .step-icon {
+    border-color: #00d4ff;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+}
+.step-item.done .step-icon {
+    border-color: #4ecdc4;
+    background: rgba(78, 205, 196, 0.15);
+}
+
+/* 旋转加载动画 */
+.spinner {
+    width: 18px; height: 18px;
+    border: 2px solid rgba(0, 212, 255, 0.2);
+    border-top-color: #00d4ff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: none;
+}
+.step-item.active .spinner { display: block; }
+.step-item.active .check-icon { display: none; }
+.step-item.done .spinner { display: none; }
+.step-item.done .check-icon { display: block; }
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.check-icon {
+    color: #4ecdc4;
+    font-size: 16px;
+    display: none;
+}
+
+.step-content h3 {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+.step-content p {
+    color: rgba(255,255,255,0.4);
+    font-size: 13px;
+}
+.step-item.active .step-content p {
+    color: rgba(0, 212, 255, 0.7);
+}
+
+/* 联想词区域 */
+.association-section {
+    background: rgba(255,255,255, 0.04);
+    border: 1px solid rgba(0, 200, 255, 0.15);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 36px;
+    min-height: 80px;
+    display: none;
+}
+.association-section.visible {
+    display: block;
+    animation: fadeSlideUp 0.5s ease;
+}
+.association-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.association-header .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #00d4ff;
+    margin-right: 10px;
+    animation: pulse-dot 1.5s infinite;
+}
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+}
+.association-header h3 {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* 思考过程折叠区 */
+.thinking-process {
+    margin-bottom: 18px;
+}
+.thinking-toggle {
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+    margin-bottom: 8px;
+}
+.thinking-toggle:hover { color: rgba(255,255,255,0.8); }
+.thinking-toggle .arrow {
+    transition: transform 0.3s;
+    font-size: 10px;
+}
+.thinking-toggle.open .arrow {
+    transform: rotate(90deg);
+}
+.thinking-content {
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: rgba(0, 212, 255, 0.7);
+    line-height: 1.8;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+}
+.thinking-content.open {
+    max-height: 200px;
+    padding: 14px 18px;
+}
+
+/* 联想词标签列表 */
+.keyword-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+.keyword-tags .label-prefix {
+    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+    line-height: 34px;
+    margin-right: 4px;
+}
+.keyword-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(78, 205, 196, 0.1);
+    border: 1px solid rgba(78, 205, 196, 0.3);
+    border-radius: 6px;
+    padding: 6px 14px;
+    color: #4ecdc4;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(8px) scale(0.9);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.keyword-tag.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+.keyword-tag .tag-check {
+    color: #4ecdc4;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* 底部进度条 */
+.progress-bar-wrapper {
+    margin-bottom: 30px;
+}
+.progress-bar-bg {
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00d4ff, #4ecdc4);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+.progress-text {
+    text-align: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+/* 取消按钮 */
+.cancel-btn-wrapper {
+    text-align: center;
+}
+.cancel-btn {
+    display: inline-block;
+    padding: 10px 36px;
+    background: rgba(255, 80, 80, 0.15);
+    border: 1px solid rgba(255, 80, 80, 0.4);
+    border-radius: 8px;
+    color: #ff6b6b;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+.cancel-btn:hover {
+    background: rgba(255, 80, 80, 0.3);
+    border-color: #ff6b6b;
+    color: #fff;
+}
+
+/* 动画 */
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 隐藏原有页脚以适配沉浸式页面 */
+.ai-analysis-page ~ .main-footer {
+    display: none;
+}
+</style>
+{% endblock %}
+
+{% block body_class %}ai-page-body{% endblock %}
+
+{% block content %}
+<div class="ai-analysis-page">
+    <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+
+    <div class="ai-container">
+        <!-- 顶部标题 -->
+        <div class="ai-header">
+            <h1><span>AI</span> 分析</h1>
+        </div>
+
+        <!-- 关键词显示 -->
+        <div class="keyword-card">
+            <div class="label">分析关键词</div>
+            <div class="keyword-text" id="keywordDisplay">{{ keyword }}</div>
+        </div>
+
+        <!-- 进度步骤 -->
+        <div class="progress-steps">
+            <div class="step-item" id="step1">
+                <div class="step-icon">
+                    <div class="spinner"></div>
+                    <span class="check-icon">✓</span>
+                </div>
+                <div class="step-content">
+                    <h3>检索数据</h3>
+                    <p>正在检索数据库，请稍后...</p>
+                </div>
+            </div>
+            <div class="step-item" id="step2">
+                <div class="step-icon">
+                    <div class="spinner"></div>
+                    <span class="check-icon">✓</span>
+                </div>
+                <div class="step-content">
+                    <h3>生成联想词</h3>
+                    <p>AI 正在分析关键词并生成联想词...</p>
+                </div>
+            </div>
+            <div class="step-item" id="step3">
+                <div class="step-icon">
+                    <div class="spinner"></div>
+                    <span class="check-icon">✓</span>
+                </div>
+                <div class="step-content">
+                    <h3>生成分析结果</h3>
+                    <p>正在汇总数据并生成报告...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 联想词区域 -->
+        <div class="association-section" id="associationSection">
+            <div class="association-header">
+                <div class="dot"></div>
+                <h3>生成联想词</h3>
+            </div>
+
+            <div class="thinking-process">
+                <div class="thinking-toggle" id="thinkingToggle" onclick="toggleThinking()">
+                    <span class="arrow">▶</span> 思考过程
+                </div>
+                <div class="thinking-content" id="thinkingContent"></div>
+            </div>
+
+            <div class="keyword-tags" id="keywordTags">
+                <span class="label-prefix">猜你想问：</span>
+            </div>
+        </div>
+
+        <!-- 进度条 -->
+        <div class="progress-bar-wrapper">
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+            <div class="progress-text" id="progressText">准备中...</div>
+        </div>
+
+        <!-- 取消按钮 -->
+        <div class="cancel-btn-wrapper">
+            <a href="/reports/" class="cancel-btn">取消任务</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    // ===== 粒子背景 =====
+    var canvas = document.getElementById('particlesCanvas');
+    var ctx = canvas.getContext('2d');
+    var particles = [];
+    var PARTICLE_COUNT = 60;
+
+    function resizeCanvas() {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    function Particle() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.radius = Math.random() * 2 + 0.5;
+        this.opacity = Math.random() * 0.4 + 0.1;
+    }
+
+    for (var i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push(new Particle());
+    }
+
+    function drawParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (var i = 0; i < particles.length; i++) {
+            var p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0, 212, 255, ' + p.opacity + ')';
+            ctx.fill();
+
+            // 连线
+            for (var j = i + 1; j < particles.length; j++) {
+                var p2 = particles[j];
+                var dx = p.x - p2.x;
+                var dy = p.y - p2.y;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.strokeStyle = 'rgba(0, 212, 255, ' + (0.06 * (1 - dist / 120)) + ')';
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+// ===== 联想词与核心业务逻辑 =====
+
+    // 假设从 URL 参数或后端模板渲染拿到了用户原始的问题
+    // 例如：/ai-analysis/?query=帮我分析一下最近的服务器采购趋势
+    const urlParams = new URLSearchParams(window.location.search);
+    const originalQuery = urlParams.get('query') || '{{ keyword|escapejs }}';
+    const fileId = urlParams.get('file_id') || null;
+    document.getElementById('keywordDisplay').innerText = originalQuery;
+
+    var progressBar = document.getElementById('progressBar');
+    var progressText = document.getElementById('progressText');
+
+    function setProgress(pct, text) {
+        progressBar.style.width = pct + '%';
+        progressText.textContent = text;
+    }
+
+    function activateStep(id) {
+        document.getElementById(id).classList.add('active');
+    }
+
+    function completeStep(id) {
+        var el = document.getElementById(id);
+        el.classList.remove('active');
+        el.classList.add('done');
+    }
+
+    // 思考过程折叠切换
+    window.toggleThinking = function() {
+        var toggle = document.getElementById('thinkingToggle');
+        var content = document.getElementById('thinkingContent');
+        toggle.classList.toggle('open');
+        content.classList.toggle('open');
+    }
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+// ===== 核心异步执行流 =====
+    function parseSseChunk(chunk) {
+        const lines = chunk.split('\n');
+        let eventName = '';
+        let dataText = '';
+
+        for (const line of lines) {
+            if (line.startsWith('event: ')) {
+                eventName = line.slice(7).trim();
+            } else if (line.startsWith('data: ')) {
+                dataText = line.slice(6).trim();
+            }
+        }
+
+        if (!dataText) {
+            return { eventName, payload: null };
+        }
+
+        try {
+            return { eventName, payload: JSON.parse(dataText) };
+        } catch (error) {
+            console.warn('JSON 解析失败:', dataText.substring(0, 100), error);
+            return { eventName, payload: null };
+        }
+    }
+
+    async function runAnalysisFlow() {
+        try {
+            // 0. 解析 URL 参数获取用户原始提问
+            const urlParams = new URLSearchParams(window.location.search);
+            const originalQuery = urlParams.get('query') || '帮我生成分析报告';
+
+            // 提取前端存储的 Token (确保发送给 FastAPI 时能通过身份认证)
+            const jwtToken = localStorage.getItem('access_token') || localStorage.getItem('token') || '';
+
+            const keywordDisplay = document.getElementById('keywordDisplay');
+            const associationSection = document.getElementById('associationSection');
+            const thinkingToggle = document.getElementById('thinkingToggle');
+            const thinkingContent = document.getElementById('thinkingContent');
+            const tagsContainer = document.getElementById('keywordTags');
+
+            keywordDisplay.innerText = 'AI 正在解析您的需求...';
+
+            // ==========================================
+            // Step 1: 准备与初始化
+            // ==========================================
+            activateStep('step1');
+            setProgress(10, '正在连接智能体编排网络...');
+            await new Promise(r => setTimeout(r, 800));
+            completeStep('step1');
+            setProgress(20, '网络连接成功 ✓');
+
+            // ==========================================
+            // Step 2: 调用 FastAPI (8001端口) 提取联想词
+            // ==========================================
+            activateStep('step2');
+            setProgress(30, '大语言模型正在深度理解需求并扩充维度...');
+
+            associationSection.classList.add('visible');
+            thinkingToggle.classList.add('open');
+            thinkingContent.classList.add('open');
+
+            // 🎯 【修改点 1：精确指向 8001 端口】
+            const expandResponse = await fetch('http://127.0.0.1:8001/api/chat/expand-keywords', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwtToken}`
+                },
+                body: JSON.stringify({ query: originalQuery })
+            });
+
+            if (!expandResponse.ok) {
+                if (expandResponse.status === 401) throw new Error('身份认证失败(401)：请检查 Token 是否有效');
+                if (expandResponse.status === 403) throw new Error('拒绝访问(403)：请检查跨域 CORS 配置');
+                throw new Error(`关键词扩展失败 (HTTP ${expandResponse.status})`);
+            }
+
+            const expandData = await expandResponse.json();
+            const associatedWords = Array.isArray(expandData.keywords) && expandData.keywords.length
+                ? expandData.keywords
+                : ['未能提取到有效关键词'];
+
+            // 动态替换顶部标题
+            keywordDisplay.innerText = associatedWords.join(' | ');
+
+            // 思考过程动画
+            tagsContainer.innerHTML = '';
+            const thinkingText = JSON.stringify(associatedWords);
+            for (let i = 0; i <= thinkingText.length; i++) {
+                thinkingContent.textContent = thinkingText.substring(0, i);
+                await new Promise(resolve => setTimeout(resolve, 20));
+            }
+
+            setProgress(45, '正在渲染分析维度...');
+
+            for (let w = 0; w < associatedWords.length; w++) {
+                const tag = document.createElement('span');
+                tag.className = 'keyword-tag';
+                tag.innerHTML = '<span class="tag-check">✓</span> ' + associatedWords[w];
+                tagsContainer.appendChild(tag);
+
+                await new Promise(resolve => setTimeout(resolve, 50));
+                tag.classList.add('show');
+
+                const pct = 45 + Math.round(((w + 1) / associatedWords.length) * 15);
+                setProgress(pct, `已锁定 ${w + 1}/${associatedWords.length} 个分析维度`);
+                await new Promise(resolve => setTimeout(resolve, 250));
+            }
+
+            completeStep('step2');
+            setProgress(60, '需求理解与关键词扩展完成');
+
+            // ==========================================
+            // Step 3: 调用 FastAPI (8001端口) 流式多智能体系统
+            // ==========================================
+            activateStep('step3');
+            setProgress(70, '多智能体正在检索知识库并生成深度报告...');
+
+            const agentResponse = await fetch('http://127.0.0.1:8001/chat/multi-agent/stream', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwtToken}`
+                },
+                body: JSON.stringify({
+                    messages: [{ role: 'user', content: originalQuery }],
+                    selected_keywords: associatedWords,
+                    use_knowledge_base: true,
+                    use_tools: true,
+                    execution_mode: 'sequential'
+                })
+            });
+
+            if (!agentResponse.ok) {
+                if (agentResponse.status === 401) throw new Error('身份认证失败(401)：请检查 Token');
+                if (agentResponse.status === 403) throw new Error('拒绝访问(403)：请检查跨域 CORS 配置');
+                throw new Error(`多智能体请求失败 (HTTP ${agentResponse.status})`);
+            }
+
+            const reader = agentResponse.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let threadId = null;
+            let buffer = '';
+            let finalReportContent = '';
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) {
+                    break;
+                }
+
+                buffer += decoder.decode(value, { stream: true });
+                const parts = buffer.split('\n\n');
+                buffer = parts.pop() || '';
+
+                for (const part of parts) {
+                    const { eventName, payload } = parseSseChunk(part);
+                    if (!payload) {
+                        continue;
+                    }
+
+                    if (eventName === 'error') {
+                        throw new Error(`后端报错：${payload.message}`);
+                    }
+
+                    if (eventName === 'agent_execution') {
+                        setProgress(80, `智能体 [${payload.agent}] 正在执行深度分析...`);
+                        continue;
+                    }
+
+                    if (eventName === 'orchestrator_aggregate' && payload.data?.final_answer) {
+                        finalReportContent = payload.data.final_answer;
+                        continue;
+                    }
+
+                    if (eventName === 'assistant_final' && payload.content) {
+                        finalReportContent = payload.content;
+                        continue;
+                    }
+
+                    if (eventName === 'completed') {
+                        threadId = payload.thread_id;
+                        break;
+                    }
+                }
+
+                if (threadId) {
+                    break;
+                }
+            }
+
+            if (!threadId) {
+                throw new Error('分析完成，但未返回有效的 thread_id');
+            }
+
+            setProgress(90, '多智能体分析完毕，正在保存报告...');
+
+            const saveResponse = await fetch('/api/report/create-from-ai/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken') || ''
+                },
+                body: JSON.stringify({
+                    title: originalQuery,
+                    content: finalReportContent,
+                    thread_id: threadId,
+                    expanded_keywords: associatedWords
+                })
+            });
+
+            if (!saveResponse.ok) {
+                const errorText = await saveResponse.text();
+                console.error('保存失败:', saveResponse.status, errorText);
+                throw new Error(`保存报告失败 (HTTP ${saveResponse.status})`);
+            }
+
+            const saveData = await saveResponse.json();
+            completeStep('step3');
+            setProgress(100, '报告落库成功，正在跳转...');
+            setTimeout(() => {
+                window.location.href = saveData.redirect_url;
+            }, 500);
+
+        } catch (error) {
+            console.error('流程中断:', error);
+            setProgress(100, '任务异常终止：' + error.message);
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('step3').classList.add('error');
+        }
+    }
+    runAnalysisFlow();
+    })();
+</script>
+{% endblock %}

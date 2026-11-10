@@ -1,0 +1,14 @@
+{
+  "name": "procurement-market-api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx tsx server/market-api.ts",
+    "import:market": "npx tsx scripts/import-procurement-sqlite.ts"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.0.0",
+    "fastify": "^5.0.0"
+  },
+  "devDependencies": { "tsx": "^4.19.0", "typescript": "^5.6.0" }
+}

@@ -1,0 +1,25 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content_title %}用户登录{% endblock %}
+{% block content_subtitle %}使用您的账号登录平台{% endblock %}
+
+{% block auth_content %}
+<form class="login" method="POST" action="{% url 'account_login' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <button class="primaryAction btn-primary" type="submit">{% trans "Sign In" %}</button>
+</form>
+{% endblock %}
+
+{% block auth_footer %}
+<p>还没有账号？ <a href="{{ signup_url }}" style="color: #0055a4; font-weight: bold; text-decoration: none;">立即注册</a></p>
+<p><a href="{% url 'account_reset_password' %}" style="color: #666; text-decoration: none; font-size: 12px;">忘记密码？</a>
+</p>
+{% endblock %}

@@ -1,0 +1,1443 @@
+﻿{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}report-detail-page{% endblock %}
+
+{% block content %}
+<style>
+    /* ===== Global Cleanups (from v3) ===== */
+    ul,
+    li {
+        list-style: none !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* ===== Sidebar Styles (from v3) ===== */
+    .report-sidebar {
+        width: 250px !important;
+        flex: 0 0 250px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 15px 0 !important;
+        height: fit-content;
+        border: 1px solid #f0f0f0;
+        overflow: hidden;
+    }
+
+    .report-container {
+        background: #f5f5f5;
+        padding: 25px 0;
+    }
+
+    .report-fluid-container {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0 24px;
+        display: flex;
+        gap: 25px;
+        align-items: flex-start;
+    }
+
+    .report-content-area {
+        flex: 1 1 auto;
+        min-width: 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        padding: 25px;
+        min-height: 800px;
+    }
+
+    .nav-tabs {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .nav-item {
+        padding: 15px 24px;
+        cursor: pointer;
+        color: #555;
+        font-size: 15px;
+        border-left: 4px solid transparent;
+        transition: all 0.3s ease;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .nav-item:hover {
+        background-color: #f8fbff;
+        color: #2196f3;
+        padding-left: 28px;
+    }
+
+    .nav-item.active {
+        background-color: #e3f2fd;
+        color: #1976d2;
+        border-left-color: #1976d2;
+        font-weight: 600;
+    }
+
+    .nav-count {
+        font-size: 12px;
+        background: #eee;
+        padding: 2px 8px;
+        border-radius: 10px;
+        color: #888;
+    }
+
+    .nav-item.active .nav-count {
+        background: #afdcfd;
+        color: #1565c0;
+    }
+
+    /* ===== Filter Styles (from v3) ===== */
+    .project-filter-bar {
+        background: white;
+        padding: 20px 25px !important;
+        border-bottom: 1px solid #f0f0f0;
+        margin-bottom: 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+
+    .criteria-row {
+        display: flex;
+        align-items: baseline;
+        margin-bottom: 15px;
+        line-height: 28px;
+    }
+
+    .criteria-label {
+        color: #888;
+        margin-right: 20px;
+        width: 70px;
+        font-weight: 500;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .criteria-options {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .c-opt {
+        cursor: pointer;
+        padding: 4px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        color: #555;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+    }
+
+    .c-opt:hover {
+        color: #2196f3;
+        background: #e3f2fd;
+    }
+
+    .c-opt.active {
+        background: #2196f3;
+        color: white;
+        box-shadow: 0 2px 5px rgba(33, 150, 243, 0.3);
+    }
+
+    /* ===== Search Input Styling (from v3) ===== */
+    .project-search-input {
+        padding: 10px 15px !important;
+        border: 1px solid #eee !important;
+        border-radius: 20px !important;
+        background: #f9f9f9;
+        transition: all 0.3s;
+        outline: none;
+    }
+
+    .project-search-input:focus {
+        border-color: #2196f3 !important;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+    }
+
+    .project-search-btn {
+        border-radius: 20px !important;
+        padding: 8px 25px !important;
+        font-weight: 500;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+    }
+
+    .project-search-btn:hover {
+        background: #00796b !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 150, 136, 0.3);
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .announcement-filter-grid {
+        grid-template-columns: minmax(220px, 280px);
+        margin-bottom: 18px;
+    }
+
+    .filter-field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .filter-label {
+        font-size: 13px;
+        color: #718096;
+        font-weight: 600;
+    }
+
+    .filter-select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #d9e3f0;
+        border-radius: 10px;
+        background: #fff;
+        color: #334155;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .filter-select:focus {
+        border-color: #2196f3;
+        box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.12);
+    }
+
+    /* ===== Announcement Tags (from v3, keep for compatibility) ===== */
+    .announcement-tag {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        margin-right: 10px;
+        font-weight: 500;
+        line-height: 1.2;
+    }
+    .tag-type {
+        background: #fff3e0;
+        color: #ff9800;
+        border: 1px solid #ffe0b2;
+    }
+    .tag-budget {
+        background: #ffebee;
+        color: #ff5722;
+        border: 1px solid #ffcdd2;
+    }
+    .tag-deal {
+        background: #e8f5e9;
+        color: #4caf50;
+        border: 1px solid #c8e6c9;
+    }
+    .tag-region {
+        background: #e0f7fa;
+        color: #009688;
+        border: 1px solid #b2ebf2;
+    }
+    .announcement-item {
+        transition: background-color 0.2s;
+        border-bottom: 1px solid #f9f9f9;
+    }
+    .announcement-item:hover {
+        background-color: #fafafa;
+    }
+
+    /* ===== Custom announcement card style (from v3, not used but kept) ===== */
+    .custom-announcement-list { background: #f9fafc; padding: 10px; border-radius: 8px; }
+    .announcement-card {
+        display: flex; justify-content: space-between; align-items: center;
+        background: #ffffff; border-radius: 6px; padding: 20px 24px;
+        margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        border: 1px solid #f0f0f0; transition: all 0.3s ease;
+    }
+    .announcement-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: translateY(-1px);
+    }
+    .card-title-row { display: flex; align-items: center; margin-bottom: 12px; }
+    .card-title { margin: 0; font-size: 16px; font-weight: 600; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 600px; }
+    .card-title a:hover { color: #2196f3; }
+    .tag-result { background-color: #fff4e5; color: #ff8f00; border: 1px solid #ffe0b2; }
+    .tag-bidding { background-color: #e3f2fd; color: #1976d2; border: 1px solid #bbdefb; }
+    .card-meta-row { display: flex; align-items: center; gap: 24px; font-size: 14px; color: #666; }
+    .meta-item { display: flex; align-items: center; }
+    .amount-red { color: #d32f2f; font-weight: 600; font-size: 15px; margin: 0 2px; }
+    .amount-green { color: #2e7d32; font-weight: 600; font-size: 15px; margin: 0 2px; }
+    .card-actions { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; height: 100%; min-height: 56px; }
+    .publish-date { font-size: 13px; color: #999; margin-bottom: 12px; }
+    .btn-view-detail {
+        display: inline-block; padding: 6px 16px; background-color: #e3f2fd;
+        color: #1976d2; border-radius: 16px; font-size: 13px; font-weight: 500;
+        text-decoration: none; transition: background-color 0.2s;
+    }
+    .btn-view-detail:hover { background-color: #bbdefb; color: #1565c0; text-decoration: none; }
+    .announcement-pagination {
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        margin-top: 24px; flex-wrap: wrap;
+    }
+    .pagination-page {
+        min-width: 36px; height: 36px; border: 1px solid #d9e3f0;
+        background: #fff; color: #4a5f7a; border-radius: 10px; cursor: pointer;
+        transition: all 0.2s ease; padding: 0 12px;
+    }
+    .pagination-page:hover { border-color: #2196f3; color: #1976d2; }
+    .pagination-page.active { background: #2196f3; border-color: #2196f3; color: #fff; font-weight: 600; }
+    .pagination-page:disabled { cursor: not-allowed; color: #b7c1cc; border-color: #edf1f5; background: #f8fafc; }
+    .pagination-summary { width: 100%; text-align: center; color: #8a97a6; font-size: 13px; }
+
+    .supply-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .stat-card {
+        border-radius: 8px;
+        padding: 20px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    }
+
+    .stat-info {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    .stat-title {
+        font-size: 13px;
+        color: #777;
+        margin-bottom: 8px;
+    }
+
+    .stat-value {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        word-break: break-word;
+    }
+
+    .stat-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .stat-icon svg {
+        width: 36px;
+        height: 36px;
+        fill: currentColor;
+    }
+
+    .card-unit { background-color: #eaf4fe; }
+    .card-unit .stat-icon { color: #3b82f6; }
+    .card-region { background-color: #fff7ed; }
+    .card-region .stat-icon { color: #f59e0b; }
+    .card-budget { background-color: #fef2f2; }
+    .card-budget .stat-icon { color: #ef4444; }
+    .card-transaction { background-color: #e6fffa; }
+    .card-transaction .stat-icon { color: #14b8a6; }
+    .card-announcement { background-color: #ecfeff; }
+    .card-announcement .stat-icon { color: #06b6d4; }
+
+    .buyer-region-panel-wrap {
+        margin-top: 30px;
+        padding: 18px;
+        background: #f5f6f8;
+        border-radius: 18px;
+    }
+
+    .buyer-region-panel {
+        display: grid;
+        grid-template-columns: minmax(260px, 0.95fr) minmax(0, 2.15fr);
+        gap: 28px;
+        align-items: stretch;
+        padding: 24px 26px;
+        min-height: 560px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    .buyer-region-copy {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        min-width: 0;
+    }
+
+    .buyer-region-title {
+        margin: 0 0 18px;
+        padding-left: 12px;
+        border-left: 4px solid #ff8a00;
+        color: #333;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .buyer-region-text {
+        margin: 0;
+        color: #555;
+        font-size: 14px;
+        line-height: 1.8;
+        text-indent: 2em;
+        word-break: break-word;
+    }
+
+    .buyer-region-map-panel {
+        position: relative;
+        min-width: 0;
+        min-height: 520px;
+        border-radius: 14px;
+        background: linear-gradient(180deg, #fffaf3 0%, #fff 100%);
+        overflow: hidden;
+    }
+
+    .buyer-region-map {
+        width: 100%;
+        height: 100%;
+        min-height: 520px;
+    }
+
+    @media (max-width: 1200px) {
+        .supply-stats-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .buyer-region-panel {
+            grid-template-columns: 1fr;
+            min-height: auto;
+        }
+
+        .buyer-region-map-panel,
+        .buyer-region-map {
+            min-height: 520px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .report-fluid-container {
+            flex-direction: column;
+            padding: 0 16px;
+        }
+
+        .report-sidebar {
+            width: 100% !important;
+            flex-basis: auto;
+        }
+
+        .supply-stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .criteria-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .criteria-label {
+            width: auto;
+            margin-right: 0;
+            margin-bottom: 8px;
+        }
+
+        .buyer-region-panel-wrap {
+            padding: 14px;
+        }
+
+        .buyer-region-panel {
+            padding: 18px;
+            gap: 18px;
+        }
+
+        .buyer-region-map-panel,
+        .buyer-region-map {
+            min-height: 400px;
+        }
+    }
+
+    @media (max-width: 520px) {
+        .supply-stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .announcement-card {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .card-actions {
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        .buyer-region-title {
+            font-size: 16px;
+        }
+
+        .buyer-region-map-panel,
+        .buyer-region-map {
+            min-height: 320px;
+        }
+    }
+</style>
+
+<div class="page-header">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">首页</a> / <a href="/reports/">需求调查报告</a> / <span>{{ page.title }}</span>
+        </div>
+        <div class="report-header-actions" style="margin-top: 15px;">
+            <h1 style="font-size: 24px; margin: 0 0 15px 0; color: #fff; line-height: 1.4;">关于“{{ page.procurement_name }}”的分析报告</h1>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div style="margin-bottom: 0; color: rgba(255,255,255,0.8); font-size: 14px;">
+                    <span class="badge" style="background:#fff; color:#2196f3; padding:2px 8px; border-radius:4px; margin-right:10px; font-weight: bold;">{{ page.analysis_type }}</span>
+                    <span>编号：{{ page.serial_number|default:"--" }}</span>
+                </div>
+                <div class="header-btns">
+                    {% if request.user.is_authenticated and request.user.is_staff %}
+                    <a href="/admin/pages/{{ page.id }}/edit/" class="btn btn-primary" style="background: #fff; color: #2196f3; border: none; padding: 5px 15px; border-radius: 4px; text-decoration: none; font-weight: bold;">项目数据调整</a>
+                    <a href="/admin/pages/{{ page.id }}/edit/" class="btn btn-outline" style="border: 1px solid rgba(255,255,255,0.6); color: #fff; padding: 5px 15px; border-radius: 4px; text-decoration: none; margin-left: 10px;">添加更多项目</a>
+                    {% endif %}
+                    {% if page.pdf_file %}
+                    <a href="{{ page.pdf_file.url }}" class="btn btn-primary" style="background: #fff; color: #2196f3; border: none; padding: 5px 15px; border-radius: 4px; text-decoration: none; margin-left: 10px; font-weight: bold;" download>下载 / 打印报告</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="report-container">
+    <div class="report-fluid-container">
+        <!-- Sidebar -->
+        <div class="report-sidebar">
+            <ul class="nav-tabs">
+                <li class="nav-item active" onclick="switchTab(this, 'supply')">
+                    <span>市场供给分析</span>
+                </li>
+                <li class="nav-item" onclick="switchTab(this, 'announcements')">
+                    <span>采购公告</span>
+                    <span class="nav-count">{{ page.report_announcements.count }}</span>
+                </li>
+                <li class="nav-item" onclick="switchTab(this, 'ai')">
+                    <span>AI总结分析</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Content Area (v3 layout, content from original report_page) -->
+        <div class="report-content-area">
+            <input type="hidden" class="report-id-input" value="{{ page.id }}">
+
+            <!-- Tab: 市场供给分析 -->
+            <div id="tab-supply" class="tab-content active">
+                <h3 style="border-left: 4px solid #2196f3; padding-left: 10px; margin-bottom: 20px;">市场供给分析</h3>
+
+                <div class="supply-stats-grid">
+                    <div class="stat-card card-unit">
+                        <div class="stat-info">
+                            <span class="stat-title">采购单位</span>
+                            <span class="stat-value">{{ page.stat_buyer_count|default:"--" }}</span>
+                        </div>
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        </div>
+                    </div>
+
+                    <div class="stat-card card-region">
+                        <div class="stat-info">
+                            <span class="stat-title">采购地区</span>
+                            <span class="stat-value">{{ page.stat_region_count|default:"--" }}</span>
+                        </div>
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        </div>
+                    </div>
+
+                    <div class="stat-card card-budget">
+                        <div class="stat-info">
+                            <span class="stat-title">预算金额</span>
+                            <span class="stat-value">{{ page.stat_budget_total|default:"--" }}</span>
+                        </div>
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2.5 11.5h-2v1.5h-2v-1.5H11v-2h6v-1.5h-6v-2h2V8h2v1.5h2v2h-6v1.5h6v1.5h-6v1.5h6v2.5z"/></svg>
+                        </div>
+                    </div>
+
+                    <div class="stat-card card-transaction">
+                        <div class="stat-info">
+                            <span class="stat-title">成交总额</span>
+                            <span class="stat-value">{{ page.stat_transaction_total|default:"--" }}</span>
+                        </div>
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3 13.5h-2v1.5h-2v-1.5H9v-2h6v-1.5H9v-2h6v-1.5H9v-2h2V6h2v1.5h2v2h-6v1.5h6v1.5h-6v1.5h6v2.5z"/></svg>
+                        </div>
+                    </div>
+
+                    <div class="stat-card card-announcement">
+                        <div class="stat-info">
+                            <span class="stat-title">采购公告</span>
+                            <span class="stat-value">{{ page.stat_announcement_count|default:page.report_announcements.count|default:"--" }}</span>
+                        </div>
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+                {% if page.market_supply_analysis %}
+                <div class="analysis-content" style="line-height: 1.8; color: #444; min-height: 200px;">
+                    {{ page.market_supply_analysis|linebreaksbr }}
+                </div>
+                {% endif %}
+
+                <div class="top-buyers-section" style="margin-top: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">
+                        <h3 style="margin: 0; border-left: 4px solid #ff9800; padding-left: 10px; color: #333; font-size: 16px;">各采购单位情况分析</h3>
+                        <a href="javascript:void(0)" style="color: #666; font-size: 13px; text-decoration: none;">更多 &gt;&gt;</a>
+                    </div>
+                    {% if top_buyer_rows %}
+                    <div style="overflow-x: auto;">
+                        <table id="top-buyers-table" class="project-table" style="width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; min-width: 620px;">
+                            <thead>
+                                <tr style="background: #fafafa; color: #555;">
+                                    <th style="padding: 12px; font-weight: normal; border-bottom: 1px solid #eee;">序号</th>
+                                    <th style="padding: 12px; font-weight: normal; border-bottom: 1px solid #eee;">采购单位</th>
+                                    <th style="padding: 12px; font-weight: normal; border-bottom: 1px solid #eee;">所属地区</th>
+                                    <th style="padding: 12px; font-weight: normal; border-bottom: 1px solid #eee;">项目数（项）</th>
+                                    <th style="padding: 12px; font-weight: normal; border-bottom: 1px solid #eee;">成交金额（万元）</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for buyer in top_buyer_rows %}
+                                <tr
+                                    style="border-bottom: 1px solid #f0f0f0;"
+                                    data-project-count="{{ buyer.project_count|default:'0' }}"
+                                    data-transaction-amount="{{ buyer.transaction_amount_value|default:'0' }}"
+                                >
+                                    <td style="padding: 12px;">
+                                        <span class="top-buyer-rank" style="display: inline-block; width: 22px; height: 22px; background: #ffede0; color: #ff7a18; border-radius: 4px; line-height: 22px; font-weight: bold; font-size: 12px;">
+                                            {{ forloop.counter }}
+                                        </span>
+                                    </td>
+                                    <td style="padding: 12px; color: #333;">{{ buyer.buyer_name }}</td>
+                                    <td style="padding: 12px; color: #666;">{{ buyer.region }}</td>
+                                    <td style="padding: 12px; color: #666;">
+                                        <a
+                                            href="{% url 'buyer_project_detail' report_id=page.id %}?buyer={{ buyer.buyer_name|urlencode }}"
+                                            style="color: #1976d2; text-decoration: none; font-weight: 600;"
+                                            title="查看{{ buyer.buyer_name }}对应项目明细"
+                                        >
+                                            {{ buyer.project_count }}
+                                        </a>
+                                    </td>
+                                    <td style="padding: 12px; color: #333;">{{ buyer.transaction_amount }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div style="text-align: center; padding: 30px; color: #999; background: #fafafa; border-radius: 4px;">
+                        暂无采购单位分析数据
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="buyer-region-panel-wrap">
+                    <div class="buyer-region-panel">
+                        <div class="buyer-region-copy">
+                            <h3 class="buyer-region-title">采购单位地区分布</h3>
+                            <p class="buyer-region-text">{{ buyer_region_summary_text }}</p>
+                        </div>
+                        <div class="buyer-region-map-panel">
+                            <div id="chart-buyer-region-map" class="buyer-region-map"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="region-chart-section" style="margin-top: 30px;">
+                    <div style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                        <h3 style="margin: 0; border-left: 4px solid #4ecdc4; padding-left: 10px; color: #333; font-size: 16px;">各地区采购金额情况</h3>
+                    </div>
+                    <div id="chart-region-amount" style="width: 100%; height: 420px;"></div>
+                </div>
+
+            </div>
+
+            <!-- Tab: 采购公告 (original, uses announcements_page variable) -->
+            <div id="tab-announcements" class="tab-content" style="display: none;">
+                <div class="view-list">
+                    {% include "reports/partials/project_filter.html" with type="announcements" %}
+                    <div id="announcements-list-wrapper">
+                        {% include "reports/partials/announcement_table.html" with announcements=announcements_page %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: AI总结分析 (original) -->
+            <div id="tab-ai" class="tab-content" style="display: none;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px;">
+                    <h3 style="border-left: 4px solid #2196f3; padding-left: 10px; margin: 0;">AI总结分析</h3>
+                    <button
+                        type="button"
+                        id="export-ai-summary-pdf-btn"
+                        style="background: #2196f3; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; white-space: nowrap;"
+                    >
+                        保存为PDF
+                    </button>
+                </div>
+                <div class="analysis-content" style="line-height: 1.8; color: #444; min-height: 200px;">
+                    {{ page.ai_summary_analysis|linebreaksbr|default:"暂无分析内容 (请在后台添加)" }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Original JavaScript from report_page (unchanged) -->
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function switchTab(element, tabName) {
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+
+        const activeTab = document.getElementById('tab-' + tabName);
+        if (activeTab) {
+            activeTab.style.display = 'block';
+            activeTab.style.opacity = '0';
+            setTimeout(() => {
+                activeTab.style.transition = 'opacity 0.3s ease';
+                activeTab.style.opacity = '1';
+            }, 10);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const exportBtn = document.getElementById('export-ai-summary-pdf-btn');
+        if (exportBtn) {
+            exportBtn.addEventListener('click', async function () {
+                const reportIdInput = document.querySelector('.report-id-input');
+                if (!reportIdInput) {
+                    alert('未找到报告编号，无法导出 PDF。');
+                    return;
+                }
+
+                const reportId = reportIdInput.value;
+                const originalText = exportBtn.textContent;
+                exportBtn.disabled = true;
+                exportBtn.textContent = '生成中...';
+                exportBtn.style.opacity = '0.7';
+
+                try {
+                    const response = await fetch(`/api/report/export-ai-summary-pdf/${reportId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken') || '',
+                        },
+                    });
+                    const data = await response.json();
+                    if (!response.ok || !data.success) {
+                        throw new Error(data.error || '导出失败');
+                    }
+
+                    alert(`${data.message}\n${data.file_path}`);
+                } catch (error) {
+                    alert(error.message || '导出 PDF 失败，请稍后重试。');
+                } finally {
+                    exportBtn.disabled = false;
+                    exportBtn.textContent = originalText;
+                    exportBtn.style.opacity = '1';
+                }
+            });
+        }
+
+        document.body.addEventListener('click', function (e) {
+            if (e.target.classList.contains('c-opt')) {
+                const container = e.target.closest('.criteria-options');
+                if (container) {
+                    container.querySelectorAll('.c-opt').forEach(el => el.classList.remove('active'));
+                    e.target.classList.add('active');
+                    triggerFetch(e.target);
+                }
+            }
+        });
+
+        document.body.addEventListener('click', function (e) {
+            if (e.target.classList.contains('project-search-btn')) triggerFetch(e.target);
+        });
+
+        document.body.addEventListener('change', function (e) {
+            if (e.target.classList.contains('announcement-region-select')) triggerFetch(e.target);
+        });
+
+        document.body.addEventListener('keyup', function (e) {
+            if (e.target.classList.contains('project-search-input') && e.key === 'Enter') triggerFetch(e.target);
+        });
+
+        document.body.addEventListener('click', function (e) {
+            const pageButton = e.target.closest('.announcement-page-link');
+            if (!pageButton) return;
+            e.preventDefault();
+            const page = parseInt(pageButton.getAttribute('data-page') || '1', 10);
+            fetchAnnouncements(page);
+        });
+    });
+
+    function triggerFetch(element) {
+        const tabContent = element.closest('.tab-content');
+        if (tabContent) {
+            if (tabContent.id === 'tab-announcements') fetchAnnouncements(1);
+            // other tabs (historical, ongoing, etc.) can be added if needed
+        }
+    }
+
+    function fetchAnnouncements(page = 1) {
+        const reportIdInput = document.querySelector('.report-id-input');
+        if (!reportIdInput) return;
+        const reportId = reportIdInput.value;
+        const tabContainer = document.getElementById('tab-announcements');
+        tabContainer.dataset.currentPage = String(page);
+
+        const params = getFilterParams(tabContainer);
+        const url = `/api/report/filter/announcements/${reportId}/?q=${encodeURIComponent(params.q)}&time=${params.time}&amount=${params.amount}&region=${encodeURIComponent(params.region)}&page=${page}`;
+
+        fetch(url).then(res => res.text()).then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newList = doc.querySelector('.custom-announcement-list');
+            if (newList) document.getElementById('announcements-list-wrapper').innerHTML = newList.outerHTML;
+        });
+    }
+
+    function getFilterParams(container) {
+        const searchInput = container.querySelector('.project-search-input');
+        const searchQuery = searchInput ? searchInput.value : '';
+        const timeFilterEl = container.querySelector('.filter-time .c-opt.active');
+        const amountFilterEl = container.querySelector('.filter-amount .c-opt.active');
+        const regionSelect = container.querySelector('.announcement-region-select');
+        return {
+            q: searchQuery,
+            time: timeFilterEl ? timeFilterEl.getAttribute('data-value') : 'all',
+            amount: amountFilterEl ? amountFilterEl.getAttribute('data-value') : 'all',
+            region: regionSelect ? regionSelect.value : 'all'
+        };
+    }
+</script>
+{{ buyer_region_map_data|json_script:"buyer-region-map-data" }}
+{{ region_amount_chart_data|json_script:"region-amount-chart-data" }}
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function parseBuyerMetric(value) {
+            const normalized = String(value || '').replace(/,/g, '').replace(/[^\d.-]/g, '');
+            const parsed = parseFloat(normalized);
+            return Number.isFinite(parsed) ? parsed : 0;
+        }
+
+        function sortTopBuyersTable() {
+            const table = document.getElementById('top-buyers-table');
+            if (!table) return;
+
+            const tbody = table.querySelector('tbody');
+            if (!tbody) return;
+
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            rows.sort(function (rowA, rowB) {
+                const projectDiff = parseBuyerMetric(rowB.dataset.projectCount) - parseBuyerMetric(rowA.dataset.projectCount);
+                if (projectDiff !== 0) {
+                    return projectDiff;
+                }
+                return parseBuyerMetric(rowB.dataset.transactionAmount) - parseBuyerMetric(rowA.dataset.transactionAmount);
+            });
+
+            rows.forEach(function (row, index) {
+                if (index < 10) {
+                    tbody.appendChild(row);
+                    row.style.display = '';
+                    const rank = row.querySelector('.top-buyer-rank');
+                    if (rank) {
+                        rank.textContent = index + 1;
+                    }
+                    return;
+                }
+                row.remove();
+            });
+        }
+
+        sortTopBuyersTable();
+
+        if (!window.echarts) return;
+
+        const regionAmountNode = document.getElementById('region-amount-chart-data');
+        const regionAmountChartData = regionAmountNode ? JSON.parse(regionAmountNode.textContent || '[]') : [];
+
+        function renderEmpty(dom, text) {
+            if (!dom) return;
+            dom.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#999;">' + text + '</div>';
+        }
+
+        function formatChartAmount(value) {
+            return Number(value || 0).toLocaleString('zh-CN', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function formatChartCount(value) {
+            return Number(value || 0).toLocaleString('zh-CN', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+        }
+
+        function buildRegionAmountSeriesData(items) {
+            const visibleLabels = new Set(['上海', '北京', '江苏', '浙江', '安徽']);
+            return (items || []).map(function (item) {
+                const name = String((item && item.name) || '').trim();
+                const value = Number(item && item.value) || 0;
+                return {
+                    name: name,
+                    value: value,
+                    axisLabel: visibleLabels.has(name) ? name : ''
+                };
+            }).filter(function (item) {
+                return item.name;
+            });
+        }
+
+        let chinaMapLoadPromise = null;
+        function ensureChinaMapLoaded() {
+            if (window.echarts && typeof window.echarts.getMap === 'function' && window.echarts.getMap('china')) {
+                return Promise.resolve();
+            }
+
+            if (chinaMapLoadPromise) {
+                return chinaMapLoadPromise;
+            }
+
+            const geoJsonUrls = [
+                'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json',
+                'https://cdn.jsdelivr.net/npm/echarts/map/json/china.json',
+                'https://fastly.jsdelivr.net/npm/echarts/map/json/china.json'
+            ];
+
+            chinaMapLoadPromise = new Promise(function (resolve, reject) {
+                let currentIndex = 0;
+
+                function tryLoad() {
+                    if (currentIndex >= geoJsonUrls.length) {
+                        reject(new Error('china map geojson not available'));
+                        return;
+                    }
+
+                    const url = geoJsonUrls[currentIndex];
+                    currentIndex += 1;
+
+                    fetch(url, { cache: 'force-cache' }).then(function (response) {
+                        if (!response.ok) {
+                            throw new Error('request failed');
+                        }
+                        return response.json();
+                    }).then(function (geoJson) {
+                        if (!(geoJson && Array.isArray(geoJson.features) && geoJson.features.length)) {
+                            throw new Error('invalid geojson');
+                        }
+
+                        window.echarts.registerMap('china', geoJson);
+                        if (!(typeof window.echarts.getMap === 'function' && window.echarts.getMap('china'))) {
+                            throw new Error('register map failed');
+                        }
+                        resolve();
+                    }).catch(function () {
+                        tryLoad();
+                    });
+                }
+
+                tryLoad();
+            }).catch(function (error) {
+                chinaMapLoadPromise = null;
+                throw error;
+            });
+
+            return chinaMapLoadPromise;
+        }
+
+        function initBuyerRegionMap() {
+            const dom = document.getElementById('chart-buyer-region-map');
+            if (!dom) return;
+
+            const dataNode = document.getElementById('buyer-region-map-data');
+            const rawMapData = dataNode ? JSON.parse(dataNode.textContent || '[]') : [];
+            if (!rawMapData.length) {
+                renderEmpty(dom, '\u6682\u65e0\u91c7\u8d2d\u5355\u4f4d\u5730\u533a\u5206\u5e03\u6570\u636e');
+                return;
+            }
+
+            const provinceAliasMap = {
+                '\u5317\u4eac': '\u5317\u4eac',
+                '\u5317\u4eac\u5e02': '\u5317\u4eac',
+                '\u5929\u6d25': '\u5929\u6d25',
+                '\u5929\u6d25\u5e02': '\u5929\u6d25',
+                '\u4e0a\u6d77': '\u4e0a\u6d77',
+                '\u4e0a\u6d77\u5e02': '\u4e0a\u6d77',
+                '\u91cd\u5e86': '\u91cd\u5e86',
+                '\u91cd\u5e86\u5e02': '\u91cd\u5e86',
+                '\u6cb3\u5317': '\u6cb3\u5317',
+                '\u6cb3\u5317\u7701': '\u6cb3\u5317',
+                '\u5c71\u897f': '\u5c71\u897f',
+                '\u5c71\u897f\u7701': '\u5c71\u897f',
+                '\u5185\u8499\u53e4': '\u5185\u8499\u53e4',
+                '\u5185\u8499\u53e4\u81ea\u6cbb\u533a': '\u5185\u8499\u53e4',
+                '\u8fbd\u5b81': '\u8fbd\u5b81',
+                '\u8fbd\u5b81\u7701': '\u8fbd\u5b81',
+                '\u5409\u6797': '\u5409\u6797',
+                '\u5409\u6797\u7701': '\u5409\u6797',
+                '\u9ed1\u9f99\u6c5f': '\u9ed1\u9f99\u6c5f',
+                '\u9ed1\u9f99\u6c5f\u7701': '\u9ed1\u9f99\u6c5f',
+                '\u6c5f\u82cf': '\u6c5f\u82cf',
+                '\u6c5f\u82cf\u7701': '\u6c5f\u82cf',
+                '\u6d59\u6c5f': '\u6d59\u6c5f',
+                '\u6d59\u6c5f\u7701': '\u6d59\u6c5f',
+                '\u5b89\u5fbd': '\u5b89\u5fbd',
+                '\u5b89\u5fbd\u7701': '\u5b89\u5fbd',
+                '\u798f\u5efa': '\u798f\u5efa',
+                '\u798f\u5efa\u7701': '\u798f\u5efa',
+                '\u6c5f\u897f': '\u6c5f\u897f',
+                '\u6c5f\u897f\u7701': '\u6c5f\u897f',
+                '\u5c71\u4e1c': '\u5c71\u4e1c',
+                '\u5c71\u4e1c\u7701': '\u5c71\u4e1c',
+                '\u6cb3\u5357': '\u6cb3\u5357',
+                '\u6cb3\u5357\u7701': '\u6cb3\u5357',
+                '\u6e56\u5317': '\u6e56\u5317',
+                '\u6e56\u5317\u7701': '\u6e56\u5317',
+                '\u6e56\u5357': '\u6e56\u5357',
+                '\u6e56\u5357\u7701': '\u6e56\u5357',
+                '\u5e7f\u4e1c': '\u5e7f\u4e1c',
+                '\u5e7f\u4e1c\u7701': '\u5e7f\u4e1c',
+                '\u5e7f\u897f': '\u5e7f\u897f',
+                '\u5e7f\u897f\u58ee\u65cf\u81ea\u6cbb\u533a': '\u5e7f\u897f',
+                '\u6d77\u5357': '\u6d77\u5357',
+                '\u6d77\u5357\u7701': '\u6d77\u5357',
+                '\u56db\u5ddd': '\u56db\u5ddd',
+                '\u56db\u5ddd\u7701': '\u56db\u5ddd',
+                '\u8d35\u5dde': '\u8d35\u5dde',
+                '\u8d35\u5dde\u7701': '\u8d35\u5dde',
+                '\u4e91\u5357': '\u4e91\u5357',
+                '\u4e91\u5357\u7701': '\u4e91\u5357',
+                '\u897f\u85cf': '\u897f\u85cf',
+                '\u897f\u85cf\u81ea\u6cbb\u533a': '\u897f\u85cf',
+                '\u9655\u897f': '\u9655\u897f',
+                '\u9655\u897f\u7701': '\u9655\u897f',
+                '\u7518\u8083': '\u7518\u8083',
+                '\u7518\u8083\u7701': '\u7518\u8083',
+                '\u9752\u6d77': '\u9752\u6d77',
+                '\u9752\u6d77\u7701': '\u9752\u6d77',
+                '\u5b81\u590f': '\u5b81\u590f',
+                '\u5b81\u590f\u56de\u65cf\u81ea\u6cbb\u533a': '\u5b81\u590f',
+                '\u65b0\u7586': '\u65b0\u7586',
+                '\u65b0\u7586\u7ef4\u543e\u5c14\u81ea\u6cbb\u533a': '\u65b0\u7586',
+                '\u9999\u6e2f': '\u9999\u6e2f',
+                '\u9999\u6e2f\u7279\u522b\u884c\u653f\u533a': '\u9999\u6e2f',
+                '\u6fb3\u95e8': '\u6fb3\u95e8',
+                '\u6fb3\u95e8\u7279\u522b\u884c\u653f\u533a': '\u6fb3\u95e8',
+                '\u53f0\u6e7e': '\u53f0\u6e7e',
+                '\u53f0\u6e7e\u7701': '\u53f0\u6e7e',
+                '\u5357\u6d77\u8bf8\u5c9b': '\u5357\u6d77\u8bf8\u5c9b'
+            };
+
+            const provinceFullNameMap = {
+                '\u5317\u4eac': '\u5317\u4eac\u5e02',
+                '\u5929\u6d25': '\u5929\u6d25\u5e02',
+                '\u4e0a\u6d77': '\u4e0a\u6d77\u5e02',
+                '\u91cd\u5e86': '\u91cd\u5e86\u5e02',
+                '\u6cb3\u5317': '\u6cb3\u5317\u7701',
+                '\u5c71\u897f': '\u5c71\u897f\u7701',
+                '\u5185\u8499\u53e4': '\u5185\u8499\u53e4\u81ea\u6cbb\u533a',
+                '\u8fbd\u5b81': '\u8fbd\u5b81\u7701',
+                '\u5409\u6797': '\u5409\u6797\u7701',
+                '\u9ed1\u9f99\u6c5f': '\u9ed1\u9f99\u6c5f\u7701',
+                '\u6c5f\u82cf': '\u6c5f\u82cf\u7701',
+                '\u6d59\u6c5f': '\u6d59\u6c5f\u7701',
+                '\u5b89\u5fbd': '\u5b89\u5fbd\u7701',
+                '\u798f\u5efa': '\u798f\u5efa\u7701',
+                '\u6c5f\u897f': '\u6c5f\u897f\u7701',
+                '\u5c71\u4e1c': '\u5c71\u4e1c\u7701',
+                '\u6cb3\u5357': '\u6cb3\u5357\u7701',
+                '\u6e56\u5317': '\u6e56\u5317\u7701',
+                '\u6e56\u5357': '\u6e56\u5357\u7701',
+                '\u5e7f\u4e1c': '\u5e7f\u4e1c\u7701',
+                '\u5e7f\u897f': '\u5e7f\u897f\u58ee\u65cf\u81ea\u6cbb\u533a',
+                '\u6d77\u5357': '\u6d77\u5357\u7701',
+                '\u56db\u5ddd': '\u56db\u5ddd\u7701',
+                '\u8d35\u5dde': '\u8d35\u5dde\u7701',
+                '\u4e91\u5357': '\u4e91\u5357\u7701',
+                '\u897f\u85cf': '\u897f\u85cf\u81ea\u6cbb\u533a',
+                '\u9655\u897f': '\u9655\u897f\u7701',
+                '\u7518\u8083': '\u7518\u8083\u7701',
+                '\u9752\u6d77': '\u9752\u6d77\u7701',
+                '\u5b81\u590f': '\u5b81\u590f\u56de\u65cf\u81ea\u6cbb\u533a',
+                '\u65b0\u7586': '\u65b0\u7586\u7ef4\u543e\u5c14\u81ea\u6cbb\u533a',
+                '\u9999\u6e2f': '\u9999\u6e2f\u7279\u522b\u884c\u653f\u533a',
+                '\u6fb3\u95e8': '\u6fb3\u95e8\u7279\u522b\u884c\u653f\u533a',
+                '\u53f0\u6e7e': '\u53f0\u6e7e\u7701'
+            };
+
+            const normalizeProvinceName = function (name) {
+                const text = String(name || '').trim();
+                if (!text) return '';
+                if (provinceAliasMap[text]) return provinceAliasMap[text];
+                return text
+                    .replace(/\u7279\u522b\u884c\u653f\u533a|\u7ef4\u543e\u5c14\u81ea\u6cbb\u533a|\u56de\u65cf\u81ea\u6cbb\u533a|\u58ee\u65cf\u81ea\u6cbb\u533a|\u81ea\u6cbb\u533a/g, '')
+                    .replace(/[\u7701\u5e02]/g, '')
+                    .trim();
+            };
+
+            const normalizedValueMap = new Map();
+            rawMapData.forEach(function (item) {
+                const normalizedName = normalizeProvinceName(item && item.name);
+                if (!normalizedName || normalizedName === '\u5168\u56fd') return;
+                const numericValue = Number(item && item.value) || 0;
+                normalizedValueMap.set(
+                    normalizedName,
+                    (normalizedValueMap.get(normalizedName) || 0) + numericValue
+                );
+            });
+
+            const normalizedMapData = Array.from(normalizedValueMap.entries()).map(function (entry) {
+                return {
+                    name: entry[0],
+                    value: entry[1]
+                };
+            });
+
+            const mapDataForEcharts = [];
+            normalizedMapData.forEach(function (item) {
+                mapDataForEcharts.push({
+                    name: item.name,
+                    value: item.value
+                });
+                const fullName = provinceFullNameMap[item.name];
+                if (fullName && fullName !== item.name) {
+                    mapDataForEcharts.push({
+                        name: fullName,
+                        value: item.value,
+                        canonicalName: item.name
+                    });
+                }
+            });
+
+            const maxValue = Math.max.apply(null, normalizedMapData.map(function (item) {
+                return Number(item.value) || 0;
+            }).concat([0]));
+
+            ensureChinaMapLoaded().then(function () {
+                if (!(window.echarts && typeof window.echarts.getMap === 'function' && window.echarts.getMap('china'))) {
+                    renderEmpty(dom, '\u4e2d\u56fd\u5730\u56fe\u8d44\u6e90\u52a0\u8f7d\u5931\u8d25');
+                    return;
+                }
+
+                const existingChart = echarts.getInstanceByDom(dom);
+                if (existingChart) {
+                    existingChart.dispose();
+                }
+
+                const chart = echarts.init(dom);
+                const option = {
+                    backgroundColor: '#f5f5f5',
+                    tooltip: {
+                        trigger: 'item',
+                        confine: true,
+                        backgroundColor: '#ffffff',
+                        borderColor: '#f3f4f6',
+                        borderWidth: 1,
+                        padding: 0,
+                        textStyle: {
+                            color: '#333',
+                            fontSize: 12,
+                            lineHeight: 20
+                        },
+                        extraCssText: 'box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12); border-radius: 12px;',
+                        formatter: function (params) {
+                            const value = Number(params && params.data ? params.data.value : params.value) || 0;
+                            const provinceName = normalizeProvinceName((params && params.name) || (params && params.data && params.data.canonicalName));
+                            return '' +
+                                '<div style="min-width: 188px; background: #ffffff; border-radius: 12px; overflow: hidden;">' +
+                                    '<div style="padding: 10px 14px 6px; color: #111827; font-weight: 700; font-size: 13px; line-height: 1.4;">\u91c7\u8d2d\u5355\u4f4d\u5730\u57df\u5206\u5e03</div>' +
+                                    '<div style="padding: 0 14px 12px; color: #374151; font-size: 13px; line-height: 1.6;">' + provinceName + ' ' + value + '</div>' +
+                                '</div>';
+                        }
+                    },
+                    visualMap: {
+                        type: 'continuous',
+                        min: 0,
+                        max: maxValue || 1,
+                        left: 18,
+                        top: 'middle',
+                        orient: 'vertical',
+                        text: ['\u591a', '\u5c11'],
+                        calculable: true,
+                        realtime: false,
+                        itemWidth: 14,
+                        itemHeight: 180,
+                        textGap: 10,
+                        precision: 0,
+                        inRange: {
+                            color: ['#ffe7c2', '#ff9f43', '#ff5e00']
+                        },
+                        outOfRange: {
+                            color: ['#ffe7c2']
+                        },
+                        textStyle: {
+                            color: '#666',
+                            fontSize: 12,
+                            fontWeight: 500
+                        },
+                        formatter: function (value) {
+                            return Math.round(value);
+                        },
+                        backgroundColor: 'rgba(255,255,255,0.96)',
+                        borderColor: '#e5e7eb',
+                        borderWidth: 1,
+                        padding: [12, 10, 12, 10]
+                    },
+                    series: [{
+                        name: '\u91c7\u8d2d\u5355\u4f4d\u5730\u57df\u5206\u5e03',
+                        type: 'map',
+                        map: 'china',
+                        roam: false,
+                        zoom: 1.12,
+                        top: '4%',
+                        left: '13%',
+                        right: '4%',
+                        bottom: '4%',
+                        label: {
+                            show: true,
+                            color: '#333',
+                            fontSize: 11,
+                            formatter: function (params) {
+                                const provinceName = normalizeProvinceName(params && params.name);
+                                return provinceName === '\u5357\u6d77\u8bf8\u5c9b' ? '' : provinceName;
+                            }
+                        },
+                        itemStyle: {
+                            areaColor: '#ffe7c2',
+                            borderColor: '#ffffff',
+                            borderWidth: 1
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                color: '#111827',
+                                fontWeight: 'bold',
+                                formatter: function (params) {
+                                    const provinceName = normalizeProvinceName(params && params.name);
+                                    return provinceName === '\u5357\u6d77\u8bf8\u5c9b' ? '' : provinceName;
+                                }
+                            },
+                            itemStyle: {
+                                areaColor: '#ff7a1a',
+                                borderColor: '#ffffff',
+                                borderWidth: 1,
+                                shadowBlur: 18,
+                                shadowColor: 'rgba(255, 122, 26, 0.28)'
+                            }
+                        },
+                        regions: [{
+                            name: '\u5357\u6d77\u8bf8\u5c9b',
+                            label: {
+                                show: false
+                            },
+                            itemStyle: {
+                                areaColor: '#f0e3d0',
+                                borderColor: '#ffffff',
+                                borderWidth: 1
+                            },
+                            emphasis: {
+                                itemStyle: {
+                                    areaColor: '#ffcf99'
+                                }
+                            }
+                        }],
+                        data: mapDataForEcharts
+                    }]
+                };
+
+                chart.setOption(option);
+                window.addEventListener('resize', function () { chart.resize(); });
+            }).catch(function () {
+                renderEmpty(dom, '\u4e2d\u56fd\u5730\u56fe\u8d44\u6e90\u52a0\u8f7d\u5931\u8d25');
+            });
+        }
+
+        initBuyerRegionMap();
+
+        function initRegionAmountChart(domId, items, emptyText) {
+            const dom = document.getElementById(domId);
+            if (!dom) return;
+
+            const filteredData = buildRegionAmountSeriesData(items);
+            if (!filteredData.length) {
+                renderEmpty(dom, emptyText);
+                return;
+            }
+
+            const existingChart = echarts.getInstanceByDom(dom);
+            if (existingChart) {
+                existingChart.dispose();
+            }
+
+            const chart = echarts.init(dom);
+            chart.setOption({
+                title: {
+                    text: '地区采购金额分布',
+                    subtext: '单位：万元',
+                    left: 'center',
+                    top: 10,
+                    textStyle: {
+                        color: '#23415f',
+                        fontSize: 18,
+                        fontWeight: 700
+                    },
+                    subtextStyle: {
+                        color: '#7a8ca0',
+                        fontSize: 12
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow',
+                        shadowStyle: {
+                            color: 'rgba(71, 128, 209, 0.08)'
+                        }
+                    },
+                    backgroundColor: '#fff',
+                    borderWidth: 0,
+                    padding: [10, 12],
+                    textStyle: {
+                        color: '#333',
+                        fontSize: 12
+                    },
+                    extraCssText: 'box-shadow: 0 10px 28px rgba(15, 23, 42, 0.14); border-radius: 10px;',
+                    formatter: function (params) {
+                        const item = params[0];
+                        return item.name + '<br/>采购金额：<strong>' + formatChartAmount(item.value) + '</strong> 万元';
+                    }
+                },
+                grid: {
+                    left: 70,
+                    right: 24,
+                    top: 80,
+                    bottom: 72
+                },
+                xAxis: {
+                    type: 'category',
+                    data: filteredData.map(function (item) { return item.name; }),
+                    axisTick: {
+                        alignWithLabel: true,
+                        show: false
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#d7e3f1'
+                        }
+                    },
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 0,
+                        color: '#334155',
+                        fontSize: 12,
+                        formatter: function (value, index) {
+                            return filteredData[index] ? filteredData[index].axisLabel : value;
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '金额（万元）',
+                    nameTextStyle: {
+                        color: '#7a8ca0',
+                        fontSize: 11,
+                        padding: [0, 0, 0, 8]
+                    },
+                    axisLabel: {
+                        color: '#6f7f90',
+                        formatter: function (value) {
+                            return formatChartAmount(value);
+                        }
+                    },
+                    axisLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: '#e9eef5'
+                        }
+                    }
+                },
+                series: [{
+                    name: '采购金额',
+                    type: 'bar',
+                    data: filteredData.map(function (item) { return item.value; }),
+                    barWidth: '55%',
+                    itemStyle: {
+                        borderRadius: [8, 8, 0, 0],
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#2f6fd6' },
+                            { offset: 1, color: '#8fc1ff' }
+                        ])
+                    }
+                }]
+            });
+            window.addEventListener('resize', function () { chart.resize(); });
+        }
+        initRegionAmountChart(
+            'chart-region-amount',
+            regionAmountChartData,
+            '暂无地区采购金额数据'
+        );
+    });
+</script>
+{% endblock %}
+

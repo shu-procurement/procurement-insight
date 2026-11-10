@@ -1,0 +1,148 @@
+<div class="project-filter-bar"
+    style="background:#fff; padding:20px 25px; border-bottom:1px solid #f0f0f0; margin-bottom:25px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+
+    <!-- Hidden Report ID for JS -->
+    <input type="hidden" class="report-id-input" value="{{ page.id }}">
+
+    <!-- Keyword Search -->
+    <div class="filter-row" style="margin-bottom: 20px; display: flex; gap: 15px;">
+        <input type="text" class="project-search-input" placeholder="项目名称/采购单位/中标单位..."
+            style="flex: 1; padding: 10px 15px; border: 1px solid #eee; border-radius: 20px; outline: none; transition: all 0.3s; background: #f9f9f9;">
+        <button class="project-search-btn"
+            style="background: #009688; color: white; border: none; padding: 8px 25px; border-radius: 20px; cursor: pointer; transition: all 0.3s; font-weight: 500;">查询</button>
+    </div>
+
+    {% if type == 'announcements' %}
+    <div class="filter-grid announcement-filter-grid">
+        <label class="filter-field">
+            <span class="filter-label">地区</span>
+            <select class="filter-select announcement-region-select">
+                {% for code, name in region_choices %}
+                <option value="{{ code }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+    {% endif %}
+
+    <!-- Filters -->
+    <div class="filter-criteria" style="font-size: 14px;">
+        <!-- Publish Time -->
+        {% if type != 'documents' %}
+        <div class="criteria-row filter-time"
+            style="display: flex; align-items: baseline; margin-bottom: 15px; line-height: 28px;">
+            <span class="criteria-label"
+                style="color: #888; margin-right: 20px; width: 70px; font-weight: 500;">发布时间:</span>
+            <div class="criteria-options" style="flex: 1; display: flex; flex-wrap: wrap; gap: 8px;">
+                <span class="c-opt active" data-value="all">不限时间</span>
+                <span class="c-opt" data-value="1m">近一月</span>
+                <span class="c-opt" data-value="3m">近三月</span>
+                <span class="c-opt" data-value="6m">近半年</span>
+                <span class="c-opt" data-value="1y">近一年</span>
+                <span class="c-opt" data-value="3y">近三年</span>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Project Amount -->
+        {% if type != 'documents' %}
+        <div class="criteria-row filter-amount"
+            style="display: flex; align-items: baseline; margin-bottom: 15px; line-height: 28px;">
+            <span class="criteria-label"
+                style="color: #888; margin-right: 20px; width: 70px; font-weight: 500;">项目金额:</span>
+            <div class="criteria-options" style="flex: 1; display: flex; flex-wrap: wrap; gap: 8px;">
+                <span class="c-opt active" data-value="all">不限金额</span>
+                <span class="c-opt" data-value="0-10">10万以内</span>
+                <span class="c-opt" data-value="10-50">10万-50万</span>
+                <span class="c-opt" data-value="50-100">50万-100万</span>
+                <span class="c-opt" data-value="100-500">100万-500万</span>
+                <span class="c-opt" data-value="500-1000">500万-1000万</span>
+                <span class="c-opt" data-value="1000-5000">1000万-5000万</span>
+                <span class="c-opt" data-value="5000-inf">5000万以上</span>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Region Filter -->
+        {% if type == 'intentions' or type == 'contracts' %}
+        <div class="criteria-row filter-region"
+            style="display: flex; align-items: baseline; margin-bottom: 15px; line-height: 28px;">
+            <span class="criteria-label"
+                style="color: #888; margin-right: 20px; width: 70px; font-weight: 500;">地区范围:</span>
+            <div class="criteria-options" style="flex: 1; display: flex; flex-wrap: wrap; gap: 8px;">
+                <span class="c-opt active" data-value="All">全国</span>
+                <span class="c-opt" data-value="北京">北京</span>
+                <span class="c-opt" data-value="天津">天津</span>
+                <span class="c-opt" data-value="河北">河北</span>
+                <span class="c-opt" data-value="山西">山西</span>
+                <span class="c-opt" data-value="内蒙古">内蒙古</span>
+                <span class="c-opt" data-value="辽宁">辽宁</span>
+                <span class="c-opt" data-value="吉林">吉林</span>
+                <span class="c-opt" data-value="黑龙江">黑龙江</span>
+                <span class="c-opt" data-value="上海">上海</span>
+                <span class="c-opt" data-value="江苏">江苏</span>
+                <span class="c-opt" data-value="浙江">浙江</span>
+                <span class="c-opt" data-value="安徽">安徽</span>
+                <span class="c-opt" data-value="福建">福建</span>
+                <span class="c-opt" data-value="江西">江西</span>
+                <span class="c-opt" data-value="山东">山东</span>
+                <span class="c-opt" data-value="河南">河南</span>
+                <span class="c-opt" data-value="湖北">湖北</span>
+                <span class="c-opt" data-value="湖南">湖南</span>
+                <span class="c-opt" data-value="广东">广东</span>
+                <span class="c-opt" data-value="广西">广西</span>
+                <span class="c-opt" data-value="海南">海南</span>
+                <span class="c-opt" data-value="重庆">重庆</span>
+                <span class="c-opt" data-value="四川">四川</span>
+                <span class="c-opt" data-value="贵州">贵州</span>
+                <span class="c-opt" data-value="云南">云南</span>
+                <span class="c-opt" data-value="西藏">西藏</span>
+                <span class="c-opt" data-value="陕西">陕西</span>
+                <span class="c-opt" data-value="甘肃">甘肃</span>
+                <span class="c-opt" data-value="青海">青海</span>
+                <span class="c-opt" data-value="宁夏">宁夏</span>
+                <span class="c-opt" data-value="新疆">新疆</span>
+                <span class="c-opt" data-value="香港">香港</span>
+                <span class="c-opt" data-value="澳门">澳门</span>
+                <span class="c-opt" data-value="台湾">台湾</span>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Document Type Filter -->
+        {% if type == 'documents' %}
+        <div class="criteria-row filter-type"
+            style="display: flex; align-items: baseline; margin-bottom: 15px; line-height: 28px;">
+            <span class="criteria-label"
+                style="color: #888; margin-right: 20px; width: 70px; font-weight: 500;">文件类型:</span>
+            <div class="criteria-options" style="flex: 1; display: flex; flex-wrap: wrap; gap: 8px;">
+                <span class="c-opt active" data-value="all">全部文件</span>
+                <span class="c-opt" data-value="procurement">采购文件</span>
+                <span class="c-opt" data-value="contract">合同文件</span>
+                <span class="c-opt" data-value="acceptance">验收文件</span>
+                <span class="c-opt" data-value="other">其他文件</span>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- File Format Filter (auto-detected from extension) -->
+        {% if type == 'documents' %}
+        <div class="criteria-row filter-format"
+            style="display: flex; align-items: baseline; margin-bottom: 15px; line-height: 28px;">
+            <span class="criteria-label"
+                style="color: #888; margin-right: 20px; width: 70px; font-weight: 500;">文件格式:</span>
+            <div class="criteria-options" style="flex: 1; display: flex; flex-wrap: wrap; gap: 8px;">
+                <span class="c-opt active" data-value="all">全部</span>
+                <span class="c-opt" data-value="doc">DOC</span>
+                <span class="c-opt" data-value="docx">DOCX</span>
+                <span class="c-opt" data-value="ppt">PPT</span>
+                <span class="c-opt" data-value="pptx">PPTX</span>
+                <span class="c-opt" data-value="pdf">PDF</span>
+                <span class="c-opt" data-value="xls">XLS</span>
+                <span class="c-opt" data-value="xlsx">XLSX</span>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>

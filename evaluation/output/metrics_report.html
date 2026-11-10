@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>Procurement System Metrics Report</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 24px;
+      color: #111827;
+      background: #F9FAFB;
+    }
+    h1, h2 {
+      margin: 0 0 12px 0;
+    }
+    .section {
+      background: #ffffff;
+      border: 1px solid #E5E7EB;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    img {
+      max-width: 100%;
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      background: white;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #E5E7EB;
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #F3F4F6;
+    }
+  </style>
+</head>
+<body>
+  <h1>采购系统评测报告</h1>
+
+  <div class="section">
+    <h2>平均响应时间</h2>
+    <img src="response_time_chart.svg" alt="平均响应时间图表">
+    <table><thead><tr><th>avg_ms</th><th>case_name</th><th>max_ms</th><th>median_ms</th><th>metric</th><th>min_ms</th><th>p95_ms</th><th>sample_count</th></tr></thead><tbody><tr><td>1692.35</td><td>django_announcements_search_server</td><td>2522.79</td><td>1537.64</td><td>response_time</td><td>1357.55</td><td>2346.81</td><td>10</td></tr><tr><td>10.07</td><td>django_ai_analysis_page</td><td>12.2</td><td>9.73</td><td>response_time</td><td>9.07</td><td>12.04</td><td>10</td></tr><tr><td>3202.22</td><td>fastapi_expand_keywords</td><td>3625.44</td><td>3154.69</td><td>response_time</td><td>3040.15</td><td>3504.31</td><td>10</td></tr></tbody></table>
+  </div>
+
+  <div class="section">
+    <h2>Search Recall@10</h2>
+    <img src="recall_at_10_chart.svg" alt="Recall@10 图表">
+    <table><thead><tr><th>avg_recall_at_10</th><th>case_name</th><th>max_recall_at_10</th><th>median_recall_at_10</th><th>metric</th><th>min_recall_at_10</th><th>sample_count</th></tr></thead><tbody><tr><td>0.0</td><td>search_server_procurement</td><td>0.0</td><td>0.0</td><td>recall_at_10</td><td>0.0</td><td>10</td></tr><tr><td>0.0</td><td>search_security_procurement</td><td>0.0</td><td>0.0</td><td>recall_at_10</td><td>0.0</td><td>10</td></tr></tbody></table>
+  </div>
+
+  <div class="section">
+    <h2>幻觉率</h2>
+    <img src="hallucination_rate_chart.svg" alt="幻觉率图表">
+    <table><thead><tr><th>avg_hallucination_rate</th><th>case_name</th><th>max_hallucination_rate</th><th>median_hallucination_rate</th><th>metric</th><th>min_hallucination_rate</th><th>sample_count</th></tr></thead><tbody><tr><td>0.9</td><td>hallucination_server_summary</td><td>1.0</td><td>1.0</td><td>hallucination_rate</td><td>0.0</td><td>10</td></tr><tr><td>1.0</td><td>hallucination_security_summary</td><td>1.0</td><td>1.0</td><td>hallucination_rate</td><td>1.0</td><td>10</td></tr></tbody></table>
+  </div>
+</body>
+</html>

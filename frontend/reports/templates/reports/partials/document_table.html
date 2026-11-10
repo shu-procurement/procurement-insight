@@ -1,0 +1,51 @@
+{% load wagtailcore_tags %}
+<div class="document-list-container">
+    <div
+        style="margin-bottom: 15px; color: #666; font-size: 14px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            共检索到 <span style="color: #ff5722; font-weight: bold; font-size: 16px;">{{ documents.count }}</span> 条数据
+        </div>
+    </div>
+
+    <div class="document-list">
+        {% for item in documents %}
+        <div class="document-item" style="padding: 20px 0; border-bottom: 1px solid #f0f0f0;">
+            <div style="display: flex; align-items: flex-start;">
+                <!-- Icon -->
+                <div style="margin-right: 15px; margin-top: 5px;">
+                    <!-- Simple PDF/File Icon using FontAwesome or generic character if FA not guaranteed -->
+                    <!-- Use a colorful span placeholder if needed, or fa if available -->
+                    <span style="font-size: 24px; color: #e53935;"><i class="fa fa-file-pdf-o">📄</i></span>
+                </div>
+
+                <div style="flex: 1;">
+                    <h4 style="margin: 0 0 10px 0; font-size: 16px; line-height: 1.5; font-weight: 600; color: #333;">
+                        {% if item.file %}
+                        <a href="{{ item.file.url }}" target="_blank" style="color: #333; text-decoration: none;">
+                            {{ item.filename }}
+                        </a>
+                        {% else %}
+                        {{ item.title }}
+                        {% endif %}
+                    </h4>
+
+                    <div style="color: #999; font-size: 13px;">
+                        <span style="margin-right: 20px;">来源: {{ item.source }}</span>
+                        <span style="margin-right: 20px;">{{ item.upload_time|date:"Y/m/d" }} 上传</span>
+                        <span>
+                            {% if item.file %}
+                            {{ item.file.size|filesizeformat }}
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div style="text-align: center; padding: 60px 0; color: #bbb;">
+            <div style="font-size: 40px; margin-bottom: 10px;">📭</div>
+            暂无相关招标文件
+        </div>
+        {% endfor %}
+    </div>
+</div>

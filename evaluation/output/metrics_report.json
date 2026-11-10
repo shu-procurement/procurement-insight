@@ -1,0 +1,1154 @@
+{
+  "response_time_results": [
+    {
+      "metric": "response_time",
+      "case_name": "django_announcements_search_server",
+      "target": "django",
+      "run_index": 1,
+      "status_code": 200,
+      "elapsed_ms": 1501.46,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_announcements_search_server",
+      "target": "django",
+      "run_index": 2,
+      "status_code": 200,
+      "elapsed_ms": 1690.73,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_announcements_search_server",
+      "target": "django",
+      "run_index": 3,
+      "status_code": 200,
+      "elapsed_ms": 1700.0,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_announcements_search_server",
+      "target": "django",
+      "run_index": 4,
+      "status_code": 200,
+      "elapsed_ms": 1573.83,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_announcements_search_server",
+      "target": "django",
+      "run_index": 5,
+      "status_code": 200,
+      "elapsed_ms": 1487.42,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_announcements_search_server",
+      "target": "django",
+      "run_index": 6,
+      "status_code": 200,
+      "elapsed_ms": 1484.09,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_announcements_search_server",
+      "target": "django",
+      "run_index": 7,
+      "status_code": 200,
+      "elapsed_ms": 1473.91,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_announcements_search_server",
+      "target": "django",
+      "run_index": 8,
+      "status_code": 200,
+      "elapsed_ms": 1357.55,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_announcements_search_server",
+      "target": "django",
+      "run_index": 9,
+      "status_code": 200,
+      "elapsed_ms": 2522.79,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_announcements_search_server",
+      "target": "django",
+      "run_index": 10,
+      "status_code": 200,
+      "elapsed_ms": 2131.72,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_ai_analysis_page",
+      "target": "django",
+      "run_index": 1,
+      "status_code": 200,
+      "elapsed_ms": 11.84,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_ai_analysis_page",
+      "target": "django",
+      "run_index": 2,
+      "status_code": 200,
+      "elapsed_ms": 9.15,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_ai_analysis_page",
+      "target": "django",
+      "run_index": 3,
+      "status_code": 200,
+      "elapsed_ms": 9.33,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_ai_analysis_page",
+      "target": "django",
+      "run_index": 4,
+      "status_code": 200,
+      "elapsed_ms": 10.24,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_ai_analysis_page",
+      "target": "django",
+      "run_index": 5,
+      "status_code": 200,
+      "elapsed_ms": 9.07,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_ai_analysis_page",
+      "target": "django",
+      "run_index": 6,
+      "status_code": 200,
+      "elapsed_ms": 12.2,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_ai_analysis_page",
+      "target": "django",
+      "run_index": 7,
+      "status_code": 200,
+      "elapsed_ms": 9.96,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_ai_analysis_page",
+      "target": "django",
+      "run_index": 8,
+      "status_code": 200,
+      "elapsed_ms": 9.96,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_ai_analysis_page",
+      "target": "django",
+      "run_index": 9,
+      "status_code": 200,
+      "elapsed_ms": 9.49,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_ai_analysis_page",
+      "target": "django",
+      "run_index": 10,
+      "status_code": 200,
+      "elapsed_ms": 9.46,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "fastapi_expand_keywords",
+      "target": "fastapi",
+      "run_index": 1,
+      "status_code": 200,
+      "elapsed_ms": 3625.44,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "fastapi_expand_keywords",
+      "target": "fastapi",
+      "run_index": 2,
+      "status_code": 200,
+      "elapsed_ms": 3072.51,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "fastapi_expand_keywords",
+      "target": "fastapi",
+      "run_index": 3,
+      "status_code": 200,
+      "elapsed_ms": 3286.27,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "fastapi_expand_keywords",
+      "target": "fastapi",
+      "run_index": 4,
+      "status_code": 200,
+      "elapsed_ms": 3040.15,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "fastapi_expand_keywords",
+      "target": "fastapi",
+      "run_index": 5,
+      "status_code": 200,
+      "elapsed_ms": 3356.26,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "fastapi_expand_keywords",
+      "target": "fastapi",
+      "run_index": 6,
+      "status_code": 200,
+      "elapsed_ms": 3113.49,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "fastapi_expand_keywords",
+      "target": "fastapi",
+      "run_index": 7,
+      "status_code": 200,
+      "elapsed_ms": 3159.32,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "fastapi_expand_keywords",
+      "target": "fastapi",
+      "run_index": 8,
+      "status_code": 200,
+      "elapsed_ms": 3150.06,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "fastapi_expand_keywords",
+      "target": "fastapi",
+      "run_index": 9,
+      "status_code": 200,
+      "elapsed_ms": 3161.65,
+      "ok": true
+    },
+    {
+      "metric": "response_time",
+      "case_name": "fastapi_expand_keywords",
+      "target": "fastapi",
+      "run_index": 10,
+      "status_code": 200,
+      "elapsed_ms": 3057.03,
+      "ok": true
+    }
+  ],
+  "response_time_summary": [
+    {
+      "metric": "response_time",
+      "case_name": "django_announcements_search_server",
+      "avg_ms": 1692.35,
+      "median_ms": 1537.64,
+      "p95_ms": 2346.81,
+      "min_ms": 1357.55,
+      "max_ms": 2522.79,
+      "sample_count": 10
+    },
+    {
+      "metric": "response_time",
+      "case_name": "django_ai_analysis_page",
+      "avg_ms": 10.07,
+      "median_ms": 9.73,
+      "p95_ms": 12.04,
+      "min_ms": 9.07,
+      "max_ms": 12.2,
+      "sample_count": 10
+    },
+    {
+      "metric": "response_time",
+      "case_name": "fastapi_expand_keywords",
+      "avg_ms": 3202.22,
+      "median_ms": 3154.69,
+      "p95_ms": 3504.31,
+      "min_ms": 3040.15,
+      "max_ms": 3625.44,
+      "sample_count": 10
+    }
+  ],
+  "search_recall_results": [
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_server_procurement",
+      "query": "服务器",
+      "run_index": 1,
+      "elapsed_ms": 828.7,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 330
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_server_procurement",
+      "query": "服务器",
+      "run_index": 2,
+      "elapsed_ms": 869.06,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 330
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_server_procurement",
+      "query": "服务器",
+      "run_index": 3,
+      "elapsed_ms": 934.68,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 330
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_server_procurement",
+      "query": "服务器",
+      "run_index": 4,
+      "elapsed_ms": 903.46,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 330
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_server_procurement",
+      "query": "服务器",
+      "run_index": 5,
+      "elapsed_ms": 920.62,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 330
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_server_procurement",
+      "query": "服务器",
+      "run_index": 6,
+      "elapsed_ms": 946.42,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 330
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_server_procurement",
+      "query": "服务器",
+      "run_index": 7,
+      "elapsed_ms": 910.08,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 330
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_server_procurement",
+      "query": "服务器",
+      "run_index": 8,
+      "elapsed_ms": 878.42,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 330
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_server_procurement",
+      "query": "服务器",
+      "run_index": 9,
+      "elapsed_ms": 921.09,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 330
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_server_procurement",
+      "query": "服务器",
+      "run_index": 10,
+      "elapsed_ms": 888.63,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 330
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_security_procurement",
+      "query": "安防",
+      "run_index": 1,
+      "elapsed_ms": 867.9,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 81
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_security_procurement",
+      "query": "安防",
+      "run_index": 2,
+      "elapsed_ms": 820.86,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 81
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_security_procurement",
+      "query": "安防",
+      "run_index": 3,
+      "elapsed_ms": 914.48,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 81
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_security_procurement",
+      "query": "安防",
+      "run_index": 4,
+      "elapsed_ms": 976.84,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 81
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_security_procurement",
+      "query": "安防",
+      "run_index": 5,
+      "elapsed_ms": 1000.23,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 81
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_security_procurement",
+      "query": "安防",
+      "run_index": 6,
+      "elapsed_ms": 916.86,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 81
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_security_procurement",
+      "query": "安防",
+      "run_index": 7,
+      "elapsed_ms": 879.91,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 81
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_security_procurement",
+      "query": "安防",
+      "run_index": 8,
+      "elapsed_ms": 873.55,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 81
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_security_procurement",
+      "query": "安防",
+      "run_index": 9,
+      "elapsed_ms": 939.64,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 81
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_security_procurement",
+      "query": "安防",
+      "run_index": 10,
+      "elapsed_ms": 823.74,
+      "retrieved_titles": [],
+      "hits": 0,
+      "relevant_total": 5,
+      "recall_at_10": 0.0,
+      "total_count": 81
+    }
+  ],
+  "search_recall_summary": [
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_server_procurement",
+      "avg_recall_at_10": 0.0,
+      "median_recall_at_10": 0.0,
+      "min_recall_at_10": 0.0,
+      "max_recall_at_10": 0.0,
+      "sample_count": 10
+    },
+    {
+      "metric": "recall_at_10",
+      "case_name": "search_security_procurement",
+      "avg_recall_at_10": 0.0,
+      "median_recall_at_10": 0.0,
+      "min_recall_at_10": 0.0,
+      "max_recall_at_10": 0.0,
+      "sample_count": 10
+    }
+  ],
+  "hallucination_results": [
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_server_summary",
+      "prompt": "请查询与服务器采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 1,
+      "elapsed_ms": 26955.25,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 100,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_server_summary",
+      "prompt": "请查询与服务器采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 2,
+      "elapsed_ms": 23883.8,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_server_summary",
+      "prompt": "请查询与服务器采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 3,
+      "elapsed_ms": 22233.16,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_server_summary",
+      "prompt": "请查询与服务器采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 4,
+      "elapsed_ms": 24107.44,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_server_summary",
+      "prompt": "请查询与服务器采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 5,
+      "elapsed_ms": 24204.9,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_server_summary",
+      "prompt": "请查询与服务器采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 6,
+      "elapsed_ms": 28977.56,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 100,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_server_summary",
+      "prompt": "请查询与服务器采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 7,
+      "elapsed_ms": 22562.45,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_server_summary",
+      "prompt": "请查询与服务器采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 8,
+      "elapsed_ms": 24460.59,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_server_summary",
+      "prompt": "请查询与服务器采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 9,
+      "elapsed_ms": 29940.2,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {
+        "title": "中国中医科学院中心机房网络改造",
+        "buyer": "北京易用时代科技有限公司",
+        "project_number": "202601140011143350"
+      },
+      "mysql_data_count": 1,
+      "supported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "unsupported_fields": [],
+      "grounded_rate": 1.0,
+      "hallucination_rate": 0.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_server_summary",
+      "prompt": "请查询与服务器采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 10,
+      "elapsed_ms": 24797.59,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_security_summary",
+      "prompt": "请查询与安防采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 1,
+      "elapsed_ms": 25745.97,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_security_summary",
+      "prompt": "请查询与安防采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 2,
+      "elapsed_ms": 28009.75,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_security_summary",
+      "prompt": "请查询与安防采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 3,
+      "elapsed_ms": 25414.17,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_security_summary",
+      "prompt": "请查询与安防采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 4,
+      "elapsed_ms": 26192.33,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_security_summary",
+      "prompt": "请查询与安防采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 5,
+      "elapsed_ms": 28331.49,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_security_summary",
+      "prompt": "请查询与安防采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 6,
+      "elapsed_ms": 29342.35,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_security_summary",
+      "prompt": "请查询与安防采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 7,
+      "elapsed_ms": 29267.07,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_security_summary",
+      "prompt": "请查询与安防采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 8,
+      "elapsed_ms": 31901.2,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_security_summary",
+      "prompt": "请查询与安防采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 9,
+      "elapsed_ms": 25310.52,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_security_summary",
+      "prompt": "请查询与安防采购相关的数据，并返回最相关的一条采购记录。",
+      "run_index": 10,
+      "elapsed_ms": 29968.01,
+      "quality_score": 0.7,
+      "required_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "answer_data": {},
+      "mysql_data_count": 1,
+      "supported_fields": [],
+      "unsupported_fields": [
+        "title",
+        "buyer",
+        "project_number"
+      ],
+      "grounded_rate": 0.0,
+      "hallucination_rate": 1.0,
+      "mysql_fields": [
+        "buyer",
+        "project_number",
+        "title"
+      ]
+    }
+  ],
+  "hallucination_summary": [
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_server_summary",
+      "avg_hallucination_rate": 0.9,
+      "median_hallucination_rate": 1.0,
+      "min_hallucination_rate": 0.0,
+      "max_hallucination_rate": 1.0,
+      "sample_count": 10
+    },
+    {
+      "metric": "hallucination_rate",
+      "case_name": "hallucination_security_summary",
+      "avg_hallucination_rate": 1.0,
+      "median_hallucination_rate": 1.0,
+      "min_hallucination_rate": 1.0,
+      "max_hallucination_rate": 1.0,
+      "sample_count": 10
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content_title %}注册新账号{% endblock %}
+{% block content_subtitle %}还没有账号？立即注册加入我们{% endblock %}
+
+{% block auth_content %}
+<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+    {% csrf_token %}
+
+    <!-- Render Non-Field Errors -->
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger" role="alert">
+        {% for error in form.non_field_errors %}
+        {{ error }}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Render Hidden Fields (e.g. redirect_to) -->
+    {% for hidden in form.hidden_fields %}
+    {{ hidden }}
+    {% endfor %}
+
+    <!-- Custom Rendering of Fields -->
+
+    <!-- Email Field -->
+    <div class="form-group mb-3">
+        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+        <div class="input-group" style="display: flex; gap: 10px;">
+            <input type="email" name="{{ form.email.name }}" class="form-control" id="{{ form.email.id_for_label }}"
+                placeholder="电子邮箱" required value="{{ form.email.value|default_if_none:'' }}" style="flex: 1;">
+            <button type="button" class="btn btn-secondary" id="sendCodeBtn" style="white-space: nowrap;">获取验证码</button>
+        </div>
+        {% if form.email.errors %}
+        <small class="text-danger">{{ form.email.errors.0 }}</small>
+        {% endif %}
+    </div>
+
+    <!-- Verification Code Field -->
+    <div class="form-group mb-3">
+        <label for="{{ form.code.id_for_label }}">{{ form.code.label }}</label>
+        <input type="text" name="{{ form.code.name }}" class="form-control" id="{{ form.code.id_for_label }}"
+            placeholder="6位验证码" required minlength="6" maxlength="6" value="{{ form.code.value|default_if_none:'' }}">
+        {% if form.code.errors %}
+        <small class="text-danger">{{ form.code.errors.0 }}</small>
+        {% endif %}
+    </div>
+
+    <!-- Username Field -->
+    <div class="form-group mb-3">
+        <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+        <input type="text" name="{{ form.username.name }}" class="form-control" id="{{ form.username.id_for_label }}"
+            placeholder="用户名" required value="{{ form.email.value|default_if_none:'' }}">
+        {% if form.username.errors %}
+        <small class="text-danger">{{ form.username.errors.0 }}</small>
+        {% endif %}
+    </div>
+
+    <!-- Password Fields -->
+    <!-- Iterate remaining fields (likely password and confirm password) -->
+    {% for field in form.visible_fields %}
+    {% if field.name != 'email' and field.name != 'code' and field.name != 'username' %}
+    <div class="form-group mb-3">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" class="form-control"
+            id="{{ field.id_for_label }}" placeholder="{{ field.label }}">
+        {% if field.errors %}
+        <small class="text-danger">{{ field.errors.0 }}</small>
+        {% endif %}
+    </div>
+    {% endif %}
+    {% endfor %}
+
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+
+    <button class="btn btn-primary" type="submit" style="width: 100%;">注册</button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sendBtn = document.getElementById('sendCodeBtn');
+        const emailInput = document.getElementById('{{ form.email.id_for_label }}'); // e.g., id_email
+        let countdown = 0;
+
+        sendBtn.addEventListener('click', function () {
+            const email = emailInput.value;
+            if (!email) {
+                alert('请先输入邮箱地址');
+                return;
+            }
+
+            if (countdown > 0) return;
+
+            // Disable button
+            sendBtn.disabled = true;
+            sendBtn.innerText = '发送中...';
+
+            fetch("{% url 'send_verification_code' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({
+                    email: email,
+                    type: 'register' // Specify type as register
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        startCountdown(60);
+                    } else {
+                        alert(data.message);
+                        sendBtn.disabled = false;
+                        sendBtn.innerText = '获取验证码';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('发送失败，请稍后重试');
+                    sendBtn.disabled = false;
+                    sendBtn.innerText = '获取验证码';
+                });
+        });
+
+        function startCountdown(seconds) {
+            countdown = seconds;
+            sendBtn.disabled = true;
+            const interval = setInterval(() => {
+                sendBtn.innerText = `${countdown}秒后重新获取`;
+                countdown--;
+                if (countdown < 0) {
+                    clearInterval(interval);
+                    sendBtn.disabled = false;
+                    sendBtn.innerText = '获取验证码';
+                }
+            }, 1000);
+        }
+    });
+</script>
+
+{% endblock %}
+
+{% block auth_footer %}
+<p>已有账号？请 <a href="{{ login_url }}" style="color: #666; text-decoration: none;">登录</a>。</p>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}report-index-page{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1>产品分析 / 需求调查</h1>
+        {% if page.intro %}
+        <div class="intro">{{ page.intro|richtext }}</div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="report-section">
+    <div class="container">
+        {% if user.is_authenticated %}
+        <div class="search-bar">
+            <form method="get" action="{{ request.path }}" id="searchForm">
+                <input
+                    type="text"
+                    name="search"
+                    id="searchInput"
+                    placeholder="请输入关键词搜索历史报告..."
+                    value="{{ search_query|default:'' }}"
+                    required
+                >
+                <button type="submit">搜索</button>
+            </form>
+        </div>
+
+        <div class="category-tabs">
+            <a href="javascript:void(0)" class="tab" onclick="fillSearch(this)">调查分析</a>
+            <a href="javascript:void(0)" class="tab" onclick="fillSearch(this)">人工智能</a>
+            <a href="javascript:void(0)" class="tab" onclick="fillSearch(this)">大数据</a>
+            <a href="javascript:void(0)" class="tab" onclick="fillSearch(this)">中成氏范围</a>
+            <a href="javascript:void(0)" class="tab" onclick="fillSearch(this)">舆论研究</a>
+            <a href="javascript:void(0)" class="tab" onclick="fillSearch(this)">物联</a>
+            <a href="javascript:void(0)" class="tab" onclick="fillSearch(this)">生活</a>
+        </div>
+
+        <script>
+        function fillSearch(el) {
+            var input = document.getElementById('searchInput');
+            input.value = el.textContent.trim();
+            var tabs = document.querySelectorAll('.category-tabs .tab');
+            tabs.forEach(function(tab) { tab.classList.remove('active'); });
+            el.classList.add('active');
+        }
+        </script>
+        {% else %}
+        <div class="login-prompt-card">
+            <h3>需要登录才能使用完整功能</h3>
+            <p>登录后您可以使用历史报告搜索、筛选和查看详情功能。</p>
+            <a href="{% url 'account_login' %}?next={{ request.path }}" class="login-btn">立即登录</a>
+        </div>
+        {% endif %}
+
+        <div class="report-table-wrapper">
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th width="60">序号</th>
+                        <th>拟采购名称</th>
+                        <th width="150">分析</th>
+                        <th width="180">分析时间</th>
+                        <th width="220">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in reports %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td class="procurement-name">{{ report.procurement_name }}</td>
+                        <td>{{ report.analysis_type|default:"分析" }}</td>
+                        <td>{{ report.analysis_time|date:"Y/m/d H:i" }}</td>
+                        <td class="actions">
+                            <a href="{% pageurl report %}" class="btn btn-view">查看</a>
+                            {% if user.is_superuser or report.owner_id == user.id %}
+                            <form method="post" action="{% url 'delete_report' report.id %}" class="inline-form" onsubmit="return confirm('确认删除这份历史报告吗？');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-delete">删除</button>
+                            </form>
+                            {% endif %}
+                            {% if user.is_staff %}
+                            <a href="/admin/pages/{{ report.id }}/edit/" class="btn btn-edit">编辑</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="no-data">暂无报告数据</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if reports.has_other_pages %}
+        <div class="pagination">
+            {% if reports.has_previous %}
+            <a href="?page={{ reports.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value|urlencode }}{% endif %}{% endfor %}" class="page-link">上一页</a>
+            {% endif %}
+
+            <span class="page-info">
+                显示第 {{ reports.start_index }} 到 {{ reports.end_index }} 条，共 {{ total_count }} 条
+            </span>
+
+            {% if reports.has_next %}
+            <a href="?page={{ reports.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value|urlencode }}{% endif %}{% endfor %}" class="page-link">下一页</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

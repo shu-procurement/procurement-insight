@@ -1,0 +1,71 @@
+﻿answer_data,case_name,elapsed_ms,grounded_rate,hallucination_rate,hits,metric,mysql_data_count,mysql_fields,ok,prompt,quality_score,query,recall_at_10,relevant_total,required_fields,retrieved_titles,run_index,status_code,supported_fields,target,total_count,unsupported_fields
+,django_announcements_search_server,1501.46,,,,response_time,,,True,,,,,,,,1,200,,django,,
+,django_announcements_search_server,1690.73,,,,response_time,,,True,,,,,,,,2,200,,django,,
+,django_announcements_search_server,1700.0,,,,response_time,,,True,,,,,,,,3,200,,django,,
+,django_announcements_search_server,1573.83,,,,response_time,,,True,,,,,,,,4,200,,django,,
+,django_announcements_search_server,1487.42,,,,response_time,,,True,,,,,,,,5,200,,django,,
+,django_announcements_search_server,1484.09,,,,response_time,,,True,,,,,,,,6,200,,django,,
+,django_announcements_search_server,1473.91,,,,response_time,,,True,,,,,,,,7,200,,django,,
+,django_announcements_search_server,1357.55,,,,response_time,,,True,,,,,,,,8,200,,django,,
+,django_announcements_search_server,2522.79,,,,response_time,,,True,,,,,,,,9,200,,django,,
+,django_announcements_search_server,2131.72,,,,response_time,,,True,,,,,,,,10,200,,django,,
+,django_ai_analysis_page,11.84,,,,response_time,,,True,,,,,,,,1,200,,django,,
+,django_ai_analysis_page,9.15,,,,response_time,,,True,,,,,,,,2,200,,django,,
+,django_ai_analysis_page,9.33,,,,response_time,,,True,,,,,,,,3,200,,django,,
+,django_ai_analysis_page,10.24,,,,response_time,,,True,,,,,,,,4,200,,django,,
+,django_ai_analysis_page,9.07,,,,response_time,,,True,,,,,,,,5,200,,django,,
+,django_ai_analysis_page,12.2,,,,response_time,,,True,,,,,,,,6,200,,django,,
+,django_ai_analysis_page,9.96,,,,response_time,,,True,,,,,,,,7,200,,django,,
+,django_ai_analysis_page,9.96,,,,response_time,,,True,,,,,,,,8,200,,django,,
+,django_ai_analysis_page,9.49,,,,response_time,,,True,,,,,,,,9,200,,django,,
+,django_ai_analysis_page,9.46,,,,response_time,,,True,,,,,,,,10,200,,django,,
+,fastapi_expand_keywords,3625.44,,,,response_time,,,True,,,,,,,,1,200,,fastapi,,
+,fastapi_expand_keywords,3072.51,,,,response_time,,,True,,,,,,,,2,200,,fastapi,,
+,fastapi_expand_keywords,3286.27,,,,response_time,,,True,,,,,,,,3,200,,fastapi,,
+,fastapi_expand_keywords,3040.15,,,,response_time,,,True,,,,,,,,4,200,,fastapi,,
+,fastapi_expand_keywords,3356.26,,,,response_time,,,True,,,,,,,,5,200,,fastapi,,
+,fastapi_expand_keywords,3113.49,,,,response_time,,,True,,,,,,,,6,200,,fastapi,,
+,fastapi_expand_keywords,3159.32,,,,response_time,,,True,,,,,,,,7,200,,fastapi,,
+,fastapi_expand_keywords,3150.06,,,,response_time,,,True,,,,,,,,8,200,,fastapi,,
+,fastapi_expand_keywords,3161.65,,,,response_time,,,True,,,,,,,,9,200,,fastapi,,
+,fastapi_expand_keywords,3057.03,,,,response_time,,,True,,,,,,,,10,200,,fastapi,,
+,search_server_procurement,828.7,,,0,recall_at_10,,,,,,服务器,0.0,5,,[],1,,,,330,
+,search_server_procurement,869.06,,,0,recall_at_10,,,,,,服务器,0.0,5,,[],2,,,,330,
+,search_server_procurement,934.68,,,0,recall_at_10,,,,,,服务器,0.0,5,,[],3,,,,330,
+,search_server_procurement,903.46,,,0,recall_at_10,,,,,,服务器,0.0,5,,[],4,,,,330,
+,search_server_procurement,920.62,,,0,recall_at_10,,,,,,服务器,0.0,5,,[],5,,,,330,
+,search_server_procurement,946.42,,,0,recall_at_10,,,,,,服务器,0.0,5,,[],6,,,,330,
+,search_server_procurement,910.08,,,0,recall_at_10,,,,,,服务器,0.0,5,,[],7,,,,330,
+,search_server_procurement,878.42,,,0,recall_at_10,,,,,,服务器,0.0,5,,[],8,,,,330,
+,search_server_procurement,921.09,,,0,recall_at_10,,,,,,服务器,0.0,5,,[],9,,,,330,
+,search_server_procurement,888.63,,,0,recall_at_10,,,,,,服务器,0.0,5,,[],10,,,,330,
+,search_security_procurement,867.9,,,0,recall_at_10,,,,,,安防,0.0,5,,[],1,,,,81,
+,search_security_procurement,820.86,,,0,recall_at_10,,,,,,安防,0.0,5,,[],2,,,,81,
+,search_security_procurement,914.48,,,0,recall_at_10,,,,,,安防,0.0,5,,[],3,,,,81,
+,search_security_procurement,976.84,,,0,recall_at_10,,,,,,安防,0.0,5,,[],4,,,,81,
+,search_security_procurement,1000.23,,,0,recall_at_10,,,,,,安防,0.0,5,,[],5,,,,81,
+,search_security_procurement,916.86,,,0,recall_at_10,,,,,,安防,0.0,5,,[],6,,,,81,
+,search_security_procurement,879.91,,,0,recall_at_10,,,,,,安防,0.0,5,,[],7,,,,81,
+,search_security_procurement,873.55,,,0,recall_at_10,,,,,,安防,0.0,5,,[],8,,,,81,
+,search_security_procurement,939.64,,,0,recall_at_10,,,,,,安防,0.0,5,,[],9,,,,81,
+,search_security_procurement,823.74,,,0,recall_at_10,,,,,,安防,0.0,5,,[],10,,,,81,
+{},hallucination_server_summary,26955.25,0.0,1.0,,hallucination_rate,100,"['buyer', 'project_number', 'title']",,请查询与服务器采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,1,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_server_summary,23883.8,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与服务器采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,2,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_server_summary,22233.16,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与服务器采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,3,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_server_summary,24107.44,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与服务器采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,4,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_server_summary,24204.9,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与服务器采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,5,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_server_summary,28977.56,0.0,1.0,,hallucination_rate,100,"['buyer', 'project_number', 'title']",,请查询与服务器采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,6,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_server_summary,22562.45,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与服务器采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,7,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_server_summary,24460.59,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与服务器采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,8,,[],,,"['title', 'buyer', 'project_number']"
+"{'title': '中国中医科学院中心机房网络改造', 'buyer': '北京易用时代科技有限公司', 'project_number': '202601140011143350'}",hallucination_server_summary,29940.2,1.0,0.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与服务器采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,9,,"['title', 'buyer', 'project_number']",,,[]
+{},hallucination_server_summary,24797.59,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与服务器采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,10,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_security_summary,25745.97,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与安防采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,1,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_security_summary,28009.75,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与安防采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,2,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_security_summary,25414.17,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与安防采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,3,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_security_summary,26192.33,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与安防采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,4,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_security_summary,28331.49,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与安防采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,5,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_security_summary,29342.35,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与安防采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,6,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_security_summary,29267.07,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与安防采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,7,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_security_summary,31901.2,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与安防采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,8,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_security_summary,25310.52,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与安防采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,9,,[],,,"['title', 'buyer', 'project_number']"
+{},hallucination_security_summary,29968.01,0.0,1.0,,hallucination_rate,1,"['buyer', 'project_number', 'title']",,请查询与安防采购相关的数据，并返回最相关的一条采购记录。,0.7,,,,"['title', 'buyer', 'project_number']",,10,,[],,,"['title', 'buyer', 'project_number']"

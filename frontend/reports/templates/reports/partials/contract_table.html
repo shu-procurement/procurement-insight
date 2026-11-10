@@ -1,0 +1,66 @@
+{% load wagtailcore_tags %}
+<div class="contract-list-container">
+    <div
+        style="margin-bottom: 15px; color: #666; font-size: 14px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            共检索到 <span style="color: #ff5722; font-weight: bold; font-size: 16px;">{{ contracts.count }}</span> 条数据
+        </div>
+        <div style="cursor: pointer; color: #2196f3; font-size: 13px;">
+            <i class="fa fa-download"></i> 导出数据
+        </div>
+    </div>
+
+    <div class="contract-list">
+        {% for item in contracts %}
+        <div class="announcement-item" style="padding: 20px 0; border-bottom: 1px solid #f0f0f0;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div style="flex: 1;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 16px; line-height: 1.5;">
+                        <span style="color: #ff5722; font-weight: bold; margin-right: 5px;">•</span>
+                        {% if item.url %}
+                        <a href="{{ item.url }}" target="_blank"
+                            style="color: #333; text-decoration: none; font-weight: 600;">{{ item.title }}</a>
+                        {% else %}
+                        <span style="color: #333; font-weight: 600;">{{ item.title }}</span>
+                        {% endif %}
+                        {% if item.url %}
+                        <a href="{{ item.url }}" target="_blank" class="announcement-tag tag-region"
+                            style="margin-left: 10px; font-weight: normal; text-decoration: none;">附件</a>
+                        {% endif %}
+                    </h4>
+
+                    <div class="tags" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <span class="announcement-tag tag-type">合同公示</span>
+
+                        <span class="announcement-tag tag-budget">
+                            预算: {{ item.budget_amount|default:"0" }}万
+                        </span>
+
+                        <span class="announcement-tag tag-deal">
+                            成交: {{ item.transaction_amount|default:"0" }}万
+                        </span>
+
+                        <span class="announcement-tag tag-region">
+                            {{ item.region|default:"--" }}{% if item.city %} - {{ item.city }}{% endif %}
+                        </span>
+
+                        <span
+                            style="color: #999; font-size: 12px; display: inline-flex; align-items: center; margin-left: 5px;">
+                            采: <span style="color: #2196f3; margin-left: 4px;">{{ item.buyer|default:"--" }}</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div style="width: 140px; text-align: right; color: #aaa; font-size: 13px; padding-top: 4px;">
+                    发布时间: {{ item.publish_date|date:"Y-m-d" }}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div style="text-align: center; padding: 60px 0; color: #bbb;">
+            <div style="font-size: 40px; margin-bottom: 10px;">📭</div>
+            暂无相关合同数据
+        </div>
+        {% endfor %}
+    </div>
+</div>

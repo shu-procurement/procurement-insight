@@ -1,0 +1,50 @@
+<div class="intention-list">
+    {% if intentions %}
+    {% for item in intentions %}
+    <div class="intention-item" style="border-bottom: 1px solid #eee; padding: 20px 0;">
+        <div class="item-header" style="display: flex; align-items: center; margin-bottom: 10px;">
+            <h3 style="margin: 0; font-size: 16px; font-weight: bold; color: #333;">
+                <span style="color: #ff5722; margin-right: 5px;">•</span>
+                {{ item.project_name }}
+            </h3>
+            <span class="tag"
+                style="background: #ff9800; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-left: 10px;">采购意向</span>
+            {% if item.budget_amount %}
+            <span class="price" style="color: #ff5722; margin-left: 10px; font-weight: bold;">{{ item.budget_amount }}万</span>
+            {% endif %}
+
+            <span class="region"
+                style="background: #e3f2fd; color: #4caf50; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-left: 10px;">
+                {{ item.province }}
+                {% if item.city %} - {{ item.city }}{% endif %}
+            </span>
+
+            {% if item.detail_url %}
+            <a href="{{ item.detail_url }}" target="_blank" class="btn btn-sm btn-outline-primary"
+                style="margin-left: auto; font-size: 12px; padding: 2px 10px; border: 1px solid #2196f3; color: #2196f3; border-radius: 4px; text-decoration: none;">
+                查看详情
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="item-meta" style="margin-bottom: 10px; color: #666; font-size: 13px;">
+            {% if item.procurement_unit %}
+            <span class="unit"
+                style="background: #e3f2fd; color: #2196f3; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-right: 10px;">
+                采: {{ item.procurement_unit }}
+            </span>
+            {% endif %}
+            <span class="date" style="float: right; color: #999;">发布时间: {{ item.publish_time|date:"Y-m-d" }}</span>
+        </div>
+
+        {% if item.content %}
+        <div class="item-content" style="color: #666; font-size: 14px; line-height: 1.6;">
+            采购内容：{{ item.content|truncatechars:100 }}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% else %}
+    <div style="padding: 30px; text-align: center; color: #999;">暂无采购意向数据</div>
+    {% endif %}
+</div>
